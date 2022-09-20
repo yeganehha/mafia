@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'Vazir';
+    src: url("/fonts/Vazir.ttf");
+}
+
+body {
+    font-family: 'Vazir' !important;
+}
+
+.bg-gradient {
+    background: linear-gradient(180deg, rgba(218, 218, 218, 0.09), rgba(121, 121, 121, 0.05)) !important;
+}
+
