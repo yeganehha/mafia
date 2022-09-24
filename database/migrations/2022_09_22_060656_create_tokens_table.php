@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -13,13 +12,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('active_codes', function (Blueprint $table) {
+        Schema::create('tokens', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->integer('code');
-            $table->unique(['user_id', 'code']);
-            $table->timestamp('expired_at');
+
+            $table->string('code', 4);
+            $table->boolean('used')->default(0);
+
+            $table->timestamps();
         });
     }
 
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('active_codes');
+        Schema::dropIfExists('tokens');
     }
 };
