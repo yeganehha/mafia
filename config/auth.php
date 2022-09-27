@@ -108,4 +108,14 @@ return [
 
     'password_timeout' => 10800,
 
+    'code' => [
+        'accept_minutes' => 15,
+        'allow_try_times' => 6,
+        'notification_by' => 'pattern',
+        'pattern' => [
+            'patternCode' => 'juhemz41m6yw3n7',
+            'from' => '+983000505',
+            'code_variable' => 'verification-code',
+        ],
+    ]
 ];

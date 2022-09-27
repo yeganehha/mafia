@@ -15,40 +15,48 @@ class Token extends Model
 
     protected $fillable = [
         'code',
-        'user_id',
-        'used'
+        'phone',
+        'used',
+        'uses',
     ];
 
-    public function __construct(array $attributes = [])
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'code' => 'string',
+        'phone' => 'string',
+        'used' => 'boolean',
+        'uses' => 'integer',
+    ];
+
+    public static function getLastToken($phone , int $accept_minutes = null) : ?self
     {
-        if (!isset($attributes['code'])) {
-            $attributes['code'] = $this->generateCode();
-        }
-        parent::__construct($attributes);
+        if ( $accept_minutes == null )
+            $accept_minutes = config('auth.code.accept_minutes' , 15 );
+        return self::where('phone',$phone)
+            ->whereBetween('created_at', [now()->subMinutes($accept_minutes), now()])
+            ->where('used' , 0 )
+            ->first() ;
     }
 
-    /**
-     * Generate a six digits code
-     *
-     * @param int $codeLength
-     * @return string
-     */
-    public function generateCode($codeLength = 4)
+    public static function generateNewToken($phone , string $token ) : self
     {
-        $max = pow(10, $codeLength);
-        $min = $max / 10 - 1;
-        $code = mt_rand($min, $max);
-        return $code;
+        $token = new Token();
+        $token->phone = $phone;
+        $token->code = $token;
+        $token->used = false;
+        $token->uses = 0;
+        $token->save();
+        return  $token;
     }
 
-    /**
-     * User tokens relation
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user()
+    public function addUses($num = 1 ): bool
     {
-        return $this->belongsTo(User::class);
+        $this->uses += $num;
+        return $this->save();
     }
 
     /**
@@ -79,30 +87,5 @@ class Token extends Model
     public function isExpired()
     {
         return $this->created_at->diffInMinutes(Carbon::now()) > static::EXPIRATION_TIME;
-    }
-
-    public function sendCode()
-    {
-        if (!$this->user) {
-            throw new \Exception("No user attached to this token.");
-        }
-        if (!$this->code) {
-            $this->code = $this->generateCode();
-        }
-        try {
-            // send code via SMS
-            $patternValues = [
-                "verification-code" => $this->code,
-            ];
-            $bulkID = IPPanel::sendPattern(
-                "juhemz41m6yw3n7",    // pattern code
-                "+983000505",      // originator
-                $this->user->phone,  // recipient
-                $patternValues,  // pattern values
-            );
-        } catch (\Exception $ex) {
-            return false; //enable to send SMS
-        }
-        return true;
     }
 }

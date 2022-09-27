@@ -10,7 +10,7 @@
                     </div>
                     <div class="card-body p-4 p-sm-5">
                         <h5 class="card-title text-center mb-5 text-light fs-5"><b>ورود / عضویت</b></h5>
-                        <form method="POST" action="{{ route('doLogin') }}">
+                        <form method="POST" action="{{ route('aut.login') }}">
                             @csrf
                             <div class="mb-3">
                                 <label for="name" class="text-muted">نام:</label>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('content')
+@section('css')
     <style>
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
@@ -9,6 +9,8 @@
             appearance: none;
         }
     </style>
+@endSection
+@section('content')
     <div class="container">
         <div class="row">
             <div class="col-lg-10 col-xl-9 mx-auto">
@@ -18,7 +20,7 @@
                     </div>
                     <div class="card-body p-4 p-sm-5">
                         <h5 class="card-title text-center mb-5 text-light fs-5"><b>تایید کد</b></h5>
-                        <form method="POST" action="{{ route('doVerify') }}">
+                        <form method="POST" action="{{ route('aut.verify') }}">
                             @csrf
                             <div class="mb-3">
                                 <label for="code" class="text-muted">کد ارسالی:</label>

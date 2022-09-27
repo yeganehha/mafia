@@ -3,48 +3,37 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Models\Token;
 use App\Models\User;
+use App\Services\Auth\AuthService;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    public function login()
+    public function showLoginForm()
     {
         return view('auth.login');
     }
 
-    public function doLogin(Request $request)
+    public function login(LoginRequest $request , AuthService $authService)
     {
-        if ($user = User::wherePhone($request->phone)->first()) {
-            $request->validate([
-                'phone' => 'required|exists:users',
+        if ( $user = $authService->login($request->phone) )
+            return redirect()->route('showVerifyForm')->with([
+                'phone' => $user->phone,
+                'id' => $user->id,
             ]);
-            $token = Token::create([
-                'user_id' => $user->id
-            ]);
-
-            if ($token->sendCode()) {
-                session()->put("code_id", $token->id);
-                session()->put("user_id", $user->id);
-                return redirect()->route('verify');
-            }
-            $token->delete();
-            return redirect()->route('login')->withErrors([
-                "Unable to send verification code"
-            ]);
-        } else {
-            // new user
-            return 'new user';
-        }
+        return redirect()->route('showLoginForm')->withErrors([
+            "Unable to send verification code"
+        ]);
     }
 
-    public function verify()
+    public function showVerifyForm()
     {
         return view('auth.verify');
     }
 
-    public function doVerify(Request $request)
+    public function verify(Request $request)
     {
         $request->validate([
             'code' => 'required|numeric'

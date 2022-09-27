@@ -25,4 +25,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Token::class);
     }
+
+    public static function findByPhone($phone) : self
+    {
+        return self::where('phone',$phone)->first();
+    }
 }
