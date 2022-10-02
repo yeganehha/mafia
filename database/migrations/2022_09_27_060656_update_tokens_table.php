@@ -15,6 +15,7 @@ return new class extends Migration {
         Schema::table('tokens', function (Blueprint $table) {
             $table->dropForeign(['pick_detail_id']);
             $table->dropColumn('pick_detail_id');
+            $table->dropColumn('used');
             $table->string('phone')->after('id');
             $table->string('code');
             $table->integer('uses')->unsigned()->after('code')->default(1);
@@ -32,6 +33,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('user_id')->after('id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('code', 4);
+            $table->boolean('used')->default(0);
             $table->dropColumn('uses');
             $table->dropColumn('phone');
         });

@@ -16,7 +16,6 @@ class Token extends Model
     protected $fillable = [
         'code',
         'phone',
-        'used',
         'uses',
     ];
 
@@ -28,7 +27,6 @@ class Token extends Model
     protected $casts = [
         'code' => 'string',
         'phone' => 'string',
-        'used' => 'boolean',
         'uses' => 'integer',
     ];
 
@@ -38,7 +36,6 @@ class Token extends Model
             $accept_minutes = config('auth.code.accept_minutes' , 15 );
         return self::where('phone',$phone)
             ->whereBetween('created_at', [now()->subMinutes($accept_minutes), now()])
-            ->where('used' , 0 )
             ->first() ;
     }
 
@@ -47,7 +44,6 @@ class Token extends Model
         $token = new Token();
         $token->phone = $phone;
         $token->code = $token;
-        $token->used = false;
         $token->uses = 0;
         $token->save();
         return  $token;
@@ -59,33 +55,8 @@ class Token extends Model
         return $this->save();
     }
 
-    /**
-     * True if the token is not used nor expired
-     *
-     * @return bool
-     */
-    public function isValid()
+    public function used(): bool
     {
-        return !$this->isUsed() && !$this->isExpired();
-    }
-
-    /**
-     * Is the current token used
-     *
-     * @return bool
-     */
-    public function isUsed()
-    {
-        return $this->used;
-    }
-
-    /**
-     * Is the current token expired
-     *
-     * @return bool
-     */
-    public function isExpired()
-    {
-        return $this->created_at->diffInMinutes(Carbon::now()) > static::EXPIRATION_TIME;
+        return $this->delete();
     }
 }

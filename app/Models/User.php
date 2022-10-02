@@ -30,4 +30,12 @@ class User extends Authenticatable
     {
         return self::where('phone',$phone)->first();
     }
+
+    public function registerNewUser($phone) : User
+    {
+        $this->phone = $phone;
+        $this->name = '';
+        $this->save();
+        return $this;
+    }
 }

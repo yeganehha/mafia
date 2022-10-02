@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Exceptions\Invalid2AuthCodeException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\TwoAuthRequest;
 use App\Models\Token;
 use App\Models\User;
 use App\Services\Auth\AuthService;
@@ -33,31 +35,27 @@ class AuthController extends Controller
         return view('auth.verify');
     }
 
-    public function verify(Request $request)
+    public function verify(TwoAuthRequest $request, AuthService $authService)
     {
-        $request->validate([
-            'code' => 'required|numeric'
-        ]);
-        if (!session()->has('code_id') || !session()->has('user_id'))
-            redirect()->route('doLogin');
-        $token = Token::where('user_id', session()->get('user_id'))->find(session()->get('code_id'));
-        if (!$token || empty($token->id))
-            redirect()->route('doLogin');
-        if (!$token->isValid())
-            redirect()->back()->withErrors('The code is either expired or used.');
-        if ($token->code !== $request->code)
-            redirect()->back()->withErrors('The code is wrong.');
-        $token->update([
-            'used' => true
-        ]);
-        $user = User::find(session()->get('user_id'));
-        auth()->login($user);
-        return redirect()->route('home');
+        try {
+            if ( $user = $authService->check2AuthCode($request->phone , $request->code)){
+                auth()->login($user);
+                return redirect()->route('home');
+            }
+        } catch (Invalid2AuthCodeException $exception){
+            return redirect()->route('showVerifyForm')->withErrors([
+                "Code Is Invalid!"
+            ]);
+        }
+        return redirect()->route('showLoginForm');
     }
 
-    public function logout()
+    public function logout(AuthService $authService)
     {
-        auth()->logout();
+        if ( $authService->logout() ){
+            auth()->logout();
+            return redirect()->route('showLoginForm');
+        }
         return redirect()->back();
     }
 }

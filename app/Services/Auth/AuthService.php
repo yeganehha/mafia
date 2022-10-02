@@ -4,10 +4,12 @@
 namespace App\Services\Auth;
 
 
+use App\Exceptions\Invalid2AuthCodeException;
 use App\Exceptions\SendToManyCodeException;
 use App\Models\Token;
 use App\Models\User;
 use App\Services\Notifications\NotificationFactory;
+use Illuminate\Support\Facades\DB;
 
 class AuthService
 {
@@ -24,6 +26,32 @@ class AuthService
             return $user;
         }
         return null;
+    }
+
+    public function check2AuthCode($phone,$code) : User
+    {
+        $user = $this->checkPhoneRegistered($phone);
+        $token = Token::getLastToken($phone);
+        if ( $token and $code == $token->code ){
+            DB::beginTransaction();
+            $token->used();
+            if ( ! $user )
+                $user = $this->registerNewUser($phone);
+            DB::commit();
+            return $user;
+        }
+        throw new Invalid2AuthCodeException();
+    }
+
+    public function logout()
+    {
+        return true;
+    }
+
+    private function registerNewUser($phone) : User
+    {
+        $user = new User();
+        return $user->registerNewUser($phone) ;
     }
 
     private function ProcessLogin(User $user) : ?User
