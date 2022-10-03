@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use SmartRaya\IPPanelLaravel\Errors\ResponseCodes;
@@ -44,10 +45,10 @@ Route::get('/test', function () {
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::as('auth.')->prefix('Auth/')->group(function () {
-    Route::get('login', [App\Http\Controllers\Auth\AuthController::class, 'showLoginForm'])->name('showLogin');
-    Route::post('Login', [App\Http\Controllers\Auth\AuthController::class, 'login'])->name('login');
-    Route::get('verify', [App\Http\Controllers\Auth\AuthController::class, 'showVerifyForm'])->name('showVerify');
-    Route::post('Verify', [App\Http\Controllers\Auth\AuthController::class, 'verify'])->name('verify');
-    Route::post('logout', [App\Http\Controllers\Auth\AuthController::class, 'logout'])->name('logout');
+Route::as('auth.')->prefix('Auth/')->middleware('guest')->group(function () {
+    Route::get('login', [AuthController::class, 'showLoginForm'])->name('showLogin');
+    Route::post('Login', [AuthController::class, 'login'])->name('login');
+    Route::get('verify', [AuthController::class, 'showVerifyForm'])->name('showVerify');
+    Route::post('verify', [AuthController::class, 'verify'])->name('verify');
 });
+Route::post('Auth/logout', [AuthController::class, 'logout'])->name('auth.logout');

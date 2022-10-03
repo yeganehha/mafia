@@ -20,8 +20,18 @@
                     </div>
                     <div class="card-body p-4 p-sm-5">
                         <h5 class="card-title text-center mb-5 text-light fs-5"><b>تایید کد</b></h5>
-                        <form method="POST" action="{{ route('aut.verify') }}">
+                        @if($errors->any())
+                            @foreach ($errors->all() as $error)
+                                <div class="alert alert-danger">
+                                    <ul class="list-group">
+                                        <li>{{ $error }}</li>
+                                    </ul>
+                                </div>
+                            @endforeach
+                        @endif
+                        <form method="POST" action="{{ route('auth.verify') }}">
                             @csrf
+                            <input type="hidden" value="{{ session()->get('phone') }}" name="phone">
                             <div class="mb-3">
                                 <label for="code" class="text-muted">کد ارسالی:</label>
                                 <input id="code" type="number"

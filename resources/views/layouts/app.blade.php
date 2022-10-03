@@ -41,9 +41,9 @@
                 <ul class="navbar-nav">
                     <!-- Authentication Links -->
                     @guest
-                        @if (Route::has('aut.showLogin'))
+                        @if (Route::has('auth.showLogin'))
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('aut.showLogin') }}">{{ __('ورود/عضویت') }}</a>
+                                <a class="nav-link" href="{{ route('auth.showLogin') }}">{{ __('ورود/عضویت') }}</a>
                             </li>
                         @endif
                     @else
@@ -54,13 +54,13 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('aut.logout') }}"
+                                <a class="dropdown-item" href="{{ route('auth.logout') }}"
                                    onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                     {{ __('خروج') }}
                                 </a>
 
-                                <form id="logout-form" action="{{ route('aut.logout') }}" method="POST" class="d-none">
+                                <form id="logout-form" action="{{ route('auth.logout') }}" method="POST" class="d-none">
                                     @csrf
                                 </form>
                             </div>

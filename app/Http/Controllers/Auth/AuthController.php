@@ -18,15 +18,15 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function login(LoginRequest $request , AuthService $authService)
+    public function login(LoginRequest $request, AuthService $authService)
     {
-        if ( $user = $authService->login($request->phone) )
-            return redirect()->route('showVerifyForm')->with([
+        if ($user = $authService->login($request->phone))
+            return redirect()->route('auth.showVerify')->with([
                 'phone' => $user->phone,
                 'id' => $user->id,
             ]);
-        return redirect()->route('showLoginForm')->withErrors([
-            "Unable to send verification code"
+        return redirect()->route('auth.showLogin')->withErrors([
+            "ارسال کد ناموفق بود"
         ]);
     }
 
@@ -38,23 +38,23 @@ class AuthController extends Controller
     public function verify(TwoAuthRequest $request, AuthService $authService)
     {
         try {
-            if ( $user = $authService->check2AuthCode($request->phone , $request->code)){
+            if ($user = $authService->check2AuthCode($request->phone, $request->code)) {
                 auth()->login($user);
                 return redirect()->route('home');
             }
-        } catch (Invalid2AuthCodeException $exception){
-            return redirect()->route('showVerifyForm')->withErrors([
-                "Code Is Invalid!"
+        } catch (Invalid2AuthCodeException $exception) {
+            return redirect()->route('auth.showVerify')->withErrors([
+                "کد نامعتبر است!"
             ]);
         }
-        return redirect()->route('showLoginForm');
+        return redirect()->route('auth.showLogin');
     }
 
     public function logout(AuthService $authService)
     {
-        if ( $authService->logout() ){
+        if ($authService->logout()) {
             auth()->logout();
-            return redirect()->route('showLoginForm');
+            return redirect()->route('auth.showLogin');
         }
         return redirect()->back();
     }

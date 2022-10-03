@@ -39,11 +39,11 @@ class Token extends Model
             ->first() ;
     }
 
-    public static function generateNewToken($phone , string $token ) : self
+    public static function generateNewToken($phone , string $tokenCode ) : self
     {
         $token = new Token();
         $token->phone = $phone;
-        $token->code = $token;
+        $token->code = $tokenCode;
         $token->uses = 0;
         $token->save();
         return  $token;

@@ -26,15 +26,15 @@ class User extends Authenticatable
         return $this->hasMany(Token::class);
     }
 
-    public static function findByPhone($phone) : self
+    public static function findByPhone($phone): self | null
     {
-        return self::where('phone',$phone)->first();
+        return self::wherePhone($phone)->first();
     }
 
-    public function registerNewUser($phone) : User
+    public function registerNewUser($phone): User
     {
         $this->phone = $phone;
-        $this->name = '';
+        $this->name = "کاربر-" . mt_rand(1000000,9999999);
         $this->save();
         return $this;
     }
