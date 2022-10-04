@@ -47,7 +47,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::as('auth.')->prefix('Auth/')->middleware('guest')->group(function () {
     Route::get('login', [AuthController::class, 'showLoginForm'])->name('showLogin');
-    Route::post('Login', [AuthController::class, 'login'])->name('login');
+    Route::post('login', [AuthController::class, 'login'])->name('login');
     Route::get('verify', [AuthController::class, 'showVerifyForm'])->name('showVerify');
     Route::post('verify', [AuthController::class, 'verify'])->name('verify');
 });
