@@ -17,38 +17,14 @@ use SmartRaya\IPPanelLaravel\Facades\IPPanel;
 |
 */
 
-Route::get('/test', function () {
-    $patternValues = [
-        "verification-code" => "121212",
-    ];
-
-    try {
-        $bulkID = IPPanel::sendPattern(
-            "juhemz41m6yw3n7",    // pattern code
-            "+983000505",      // originator
-            "989375074371",  // recipient
-            $patternValues,  // pattern values
-        );
-    } catch (Error $e) { // ippanel error
-        var_dump($e->unwrap()); // get real content of error
-        echo $e->getCode();
-
-        // error codes checking
-        if ($e->code() == ResponseCodes::ErrUnprocessableEntity) {
-            echo "Unprocessable entity";
-        }
-    } catch (Exception $e) { // http error
-        var_dump($e->getMessage()); // get stringified error
-        echo $e->getCode();
-    }
-});
-
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::as('auth.')->prefix('Auth/')->middleware('guest')->group(function () {
-    Route::get('login', [AuthController::class, 'showLoginForm'])->name('showLogin');
-    Route::post('Login', [AuthController::class, 'login'])->name('login');
-    Route::get('verify', [AuthController::class, 'showVerifyForm'])->name('showVerify');
-    Route::post('verify', [AuthController::class, 'verify'])->name('verify');
+Route::as('auth.')->prefix('Auth/')->group(function () {
+    Route::middleware('guest')->group(function () {
+        Route::get('login', [AuthController::class, 'showLoginForm'])->name('showLogin');
+        Route::post('Login', [AuthController::class, 'login'])->name('login');
+        Route::get('verify', [AuthController::class, 'showVerifyForm'])->name('showVerify');
+        Route::post('verify', [AuthController::class, 'verify'])->name('verify');
+    });
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 });
-Route::post('Auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
