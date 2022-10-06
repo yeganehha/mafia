@@ -19,7 +19,7 @@
                         <img src="/image/form-image.webp" alt="Login-image">
                     </div>
                     <div class="card-body p-4 p-sm-5">
-                        <h5 class="card-title text-center mb-5 text-light fs-5"><b>تایید کد</b></h5>
+                        <h5 class="card-title text-center mb-5 text-light fs-5"><b>{{ __('titles.confirm_code') }}</b></h5>
                         @if($errors->any())
                             @foreach ($errors->all() as $error)
                                 <div class="alert alert-danger">
@@ -33,7 +33,7 @@
                             @csrf
                             <input type="hidden" value="{{ session()->get('phone') }}" name="phone">
                             <div class="mb-3">
-                                <label for="code" class="text-muted">کد ارسالی:</label>
+                                <label for="code" class="text-muted">{{ __('titles.submit_code') }}:</label>
                                 <input id="code" type="number"
                                        class="border-secondary bg-dark text-light form-control @error('code') is-invalid @enderror mt-2"
                                        name="code" value="{{ old('code') }}" required autocomplete="code" autofocus>
@@ -46,10 +46,10 @@
 
                             <div class="d-grid mb-2 mt-5">
                                 <button class="btn btn-primary fw-bold text-uppercase" type="submit">
-                                    بررسی کد تایید
+                                    {{ __('titles.check_code') }}
                                 </button>
                                 <a href="{{ route('home') }}"
-                                   class="mt-3 btn btn-secondary fw-bold text-uppercase">صفحه اصلی</a>
+                                   class="mt-3 btn btn-secondary fw-bold text-uppercase">{{ __('titles.home_page') }}</a>
                             </div>
 
                         </form>

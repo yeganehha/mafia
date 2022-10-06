@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ __('titles.app_name') }}</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -15,15 +15,22 @@
 
     <!-- Links -->
     <link rel="stylesheet" href="/plugin/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/fonts/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="/fonts/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" href="/css/app.css">
     @yield('css')
+    <style>
+        .dropdown-item:hover {
+            background: #101113;
+        }
+    </style>
 </head>
 <body dir="rtl" class="bg-dark">
 <div id="app">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow">
         <div class="container">
             <a class="navbar-brand text-info" href="{{ url('/') }}">
-                {{ config('app.name', 'مافیا') }}
+                {{ __('titles.app_name') }}
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -43,7 +50,7 @@
                     @guest
                         @if (Route::has('auth.showLogin'))
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('auth.showLogin') }}">{{ __('ورود/عضویت') }}</a>
+                                <a class="nav-link" href="{{ route('auth.showLogin') }}">{{ __('titles.login') }}</a>
                             </li>
                         @endif
                     @else
@@ -53,11 +60,17 @@
                                 {{ Auth::user()->name }}
                             </a>
 
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('auth.logout') }}"
+                            <div class="dropdown-menu dropdown-menu-end bg-dark" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item text-light" href="{{ route('home') }}">
+                                    {{ __('titles.home_page') }}
+                                </a>
+                                <a class="dropdown-item text-light" href="{{ route('profile.home') }}">
+                                    {{ __('titles.dashboard') }}
+                                </a>
+                                <a class="dropdown-item text-light" href="{{ route('auth.logout') }}"
                                    onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                    {{ __('خروج') }}
+                                    {{ __('titles.exit') }}
                                 </a>
 
                                 <form id="logout-form" action="{{ route('auth.logout') }}" method="POST" class="d-none">
@@ -71,7 +84,7 @@
         </div>
     </nav>
 
-    <main class="py-4">
+    <main class="py-4 d-flex flex-column justify-content-center align-items-center">
         @yield('content')
     </main>
 </div>

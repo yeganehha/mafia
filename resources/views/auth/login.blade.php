@@ -9,7 +9,7 @@
                         <img src="/image/form-image.webp" alt="Login-image">
                     </div>
                     <div class="card-body p-4 p-sm-5">
-                        <h5 class="card-title text-center mb-5 text-light fs-5"><b>ورود / عضویت</b></h5>
+                        <h5 class="card-title text-center mb-5 text-light fs-5"><b>{{ __('titles.login') }}</b></h5>
                         @if($errors->any())
                             @foreach ($errors->all() as $error)
                                 <div class="alert alert-danger">
@@ -22,7 +22,7 @@
                         <form method="POST" action="{{ route('auth.login') }}">
                             @csrf
                             <div class="mb-3">
-                                <label for="phone" class="text-muted">شماره موبایل:</label>
+                                <label for="phone" class="text-muted">{{ __('titles.phone') }}:</label>
                                 <input id="phone" type="tel"
                                        class="border-secondary bg-dark text-light form-control @error('phone') is-invalid @enderror mt-2"
                                        name="phone" value="{{ old('phone') }}" required autocomplete="phone" autofocus>
@@ -35,10 +35,10 @@
 
                             <div class="d-grid mb-2 mt-5">
                                 <button class="btn btn-primary fw-bold text-uppercase" type="submit">
-                                    ارسال کد تایید
+                                    {{ __('titles.send_code') }}
                                 </button>
                                 <a href="{{ route('home') }}"
-                                   class="mt-3 btn btn-secondary fw-bold text-uppercase">صفحه اصلی</a>
+                                   class="mt-3 btn btn-secondary fw-bold text-uppercase">{{ __('titles.home_page') }}</a>
                             </div>
 
                         </form>

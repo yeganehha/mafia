@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Profile\ProfileController;
+use App\Http\Controllers\Room\RoomController;
 use Illuminate\Support\Facades\Route;
 use SmartRaya\IPPanelLaravel\Errors\ResponseCodes;
 use SmartRaya\IPPanelLaravel\Facades\IPPanel;
@@ -27,4 +29,15 @@ Route::as('auth.')->prefix('Auth/')->group(function () {
         Route::post('verify', [AuthController::class, 'verify'])->name('verify');
     });
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+});
+
+Route::as('profile.')->prefix('profile/')->middleware('auth')->group(function () {
+    Route::get('/', [ProfileController::class, 'index'])->name('home');
+    Route::get('/setting', [ProfileController::class, 'setting'])->name('setting');
+    Route::post('/edit', [ProfileController::class, 'update'])->name('edit');
+});
+
+Route::as('rooms.')->prefix('room/')->group(function () {
+    Route::get('/create', [RoomController::class, 'create'])->name('create');
+    Route::post('/create', [RoomController::class, 'store']);
 });

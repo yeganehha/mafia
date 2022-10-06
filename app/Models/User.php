@@ -19,11 +19,17 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'phone',
+        'avatar',
     ];
 
     public function tokens()
     {
         return $this->hasMany(Token::class);
+    }
+
+    public function rooms()
+    {
+        return $this->hasMany(Room::class);
     }
 
     public static function findByPhone($phone): self|null
@@ -34,7 +40,9 @@ class User extends Authenticatable
     public function registerNewUser($phone): User
     {
         $this->phone = $phone;
-        $this->name = "کاربر-" . mt_rand(1000000, 9999999);
+        $this->name = 'user-' . mt_rand(1000000, 9999999);
+        $this->coin = 100;
+        $this->avatar = "avatars/default-avatar.png";
         $this->save();
         return $this;
     }
