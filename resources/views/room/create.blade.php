@@ -24,7 +24,6 @@
                                name="type" value="{{ $value }}" required checked>
                         <label for="{{ $key }}" class="text-light form-check-label mt-2">
                             @if(\Illuminate\Support\Facades\App::getLocale() == "fa")
-                                
                             @endif
                         </label>
                     </div>
