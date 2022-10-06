@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Exceptions\Invalid2AuthCodeException;
+use App\Exceptions\SendToManyCodeException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\TwoAuthRequest;
@@ -20,14 +21,20 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request, AuthService $authService)
     {
-        if ($user = $authService->login($request->phone))
-            return redirect()->route('auth.showVerify')->with([
-                'phone' => $user->phone,
-                'id' => $user->id,
+        try {
+            if ($user = $authService->login($request->phone))
+                return redirect()->route('auth.showVerify')->with([
+                    'phone' => $user->phone,
+                    'id' => $user->id,
+                ]);
+            return redirect()->route('auth.showLogin')->withErrors([
+                "ارسال کد ناموفق بود"
             ]);
-        return redirect()->route('auth.showLogin')->withErrors([
-            "ارسال کد ناموفق بود"
-        ]);
+        } catch (SendToManyCodeException $exception) {
+            return redirect()->route('auth.showLogin')->withErrors([
+                "تعداد درخواست های ارسال پیامک شما، از حد مجاز بیشتر شده است!"
+            ]);
+        }
     }
 
     public function showVerifyForm()
