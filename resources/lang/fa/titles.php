@@ -28,7 +28,9 @@ return [
     'room_created' => 'زمان ایجاد',
     'room_creator' => 'نام سازنده',
     'creator_score' => 'امتیاز سازنده',
-    'create_room' => 'ساخت اتاق جدید',
+    'create_public_room' => 'ساخت اتاق عمومی',
+    'create_private_room' => 'ساخت اتاق خصوصی',
     'room_type' => 'نوع اتاق',
     'classic_room' => 'کلاسیک',
+    'create_room' => 'ایجاد اتاق',
 ];

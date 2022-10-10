@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'no_room_for_user' => "You don't have an active room",
-    'login_for_join' => "To join the room, first login",
-    'login_for_create_room' => "To create a room, first login",
+    'no_room_for_user' => "You don't have an active rooms",
+    'login_for_join' => "To join the rooms, first login",
+    'login_for_create_room' => "To create a rooms, first login",
 ];

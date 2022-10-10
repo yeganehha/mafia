@@ -30,7 +30,7 @@
 
 @section('content')
     <h5 class="text-light mb-3 mt-1">{{ __('titles.user_rooms') }}</h5>
-    <div class="row">
+    <div class="row w-100 justify-content-center align-items-center">
         @foreach($rooms as $room)
             @if(auth()->check())
                 @if($room->user_id == auth()->user()->id)
@@ -69,7 +69,10 @@
         @endforeach
     </div>
     @if(auth()->check())
-        <a href="{{ route('rooms.create') }}" class="btn btn-success btn-sm w-25">{{ __('titles.create_room') }}</a>
+        <div class="d-flex w-75 justify-content-center align-items-center">
+            <a href="{{ route('rooms.create.public') }}" class="btn btn-success btn-sm me-2 ms-2">{{ __('titles.create_public_room') }}</a>
+            <a href="{{ route('rooms.create.private') }}" class="btn btn-success btn-sm me-2 ms-2">{{ __('titles.create_private_room') }}</a>
+        </div>
     @else
         <div class="alert alert-warning">
             {{ __('messages.login_for_create_room') }}
@@ -78,7 +81,7 @@
     <hr class="w-75 text-light">
 
     <h5 class="text-light mb-2 mt-3">{{ __('titles.all_rooms') }}</h5>
-    <div class="row">
+    <div class="row w-100 justify-content-center align-items-center">
         @foreach($rooms as $room)
             <div class="col-4">
                 <div class="card rounded-10 border-0 shadow-lg cd-9 mx-auto mb-5 overflow-hidden text-light"

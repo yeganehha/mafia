@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -45,5 +47,19 @@ class User extends Authenticatable
         $this->avatar = "avatars/default-avatar.png";
         $this->save();
         return $this;
+    }
+
+    public function incrementCoin($increment = 1)
+    {
+        if (isset(Auth::user()->id)) {
+            DB::table('users')->whereId(Auth::user()->id)->increment('coin', $increment);
+        }
+    }
+
+    public function decrementCoin($decrement = 1)
+    {
+        if (isset(Auth::user()->id)) {
+            DB::table('users')->whereId(Auth::user()->id)->decrement('coin', $decrement);
+        }
     }
 }

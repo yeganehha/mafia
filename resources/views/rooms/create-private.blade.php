@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <form action="" method="POST" class="w-75">
+    <form action="{{ route('rooms.create.public') }}" method="POST" class="w-75">
         @csrf
         <div class="row">
             <div class="col mb-3">
@@ -20,15 +20,20 @@
                 @foreach(config('roomType.types') as $key => $value)
                     <div class="d-flex">
                         <input id="{{ $key }}" type="radio"
-                               class="form-check @error('type') is-invalid @enderror mt-2"
-                               name="type" value="{{ $value }}" required checked>
-                        <label for="{{ $key }}" class="text-light form-check-label mt-2">
-                            @if(\Illuminate\Support\Facades\App::getLocale() == "fa")
-                            @endif
+                               class="form-check-input @error('type') is-invalid @enderror mt-2"
+                               name="type" value="{{ $value }}" required checked>&nbsp;
+                        <label for="{{ $key }}" class="text-light form-check-label mt-1">
+                            {{ __('titles.classic_room') }}
                         </label>
+                        @error('type')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
                     </div>
                 @endforeach
             </div>
         </div>
+        <button type="submit" class="btn btn-success">{{ __('titles.create_room') }}</button>
     </form>
 @endsection
