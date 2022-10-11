@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    <form action="{{ route('rooms.create.public') }}" method="POST" class="w-75">
+    <form action="{{ route('rooms.create.private') }}" method="POST" class="w-75">
         @csrf
-        <div class="row">
+        <div class="row mb-3">
             <div class="col mb-3">
                 <label for="name" class="text-muted">{{ __('titles.name') }}:</label>
                 <input id="name" type="text"
@@ -34,6 +34,117 @@
                 @endforeach
             </div>
         </div>
-        <button type="submit" class="btn btn-success">{{ __('titles.create_room') }}</button>
+        <div class="row mb-3">
+            <div class="col mb-3 d-flex flex-column">
+                <label for="show-link-input" class="text-muted form-label">{{ __('titles.link_input') }}:</label>
+                <div class="d-flex">
+                    <input id="show-link-input" type="checkbox"
+                           class="form-check-input @error('type') is-invalid @enderror mt-2"
+                           name="showLinkInput">&nbsp;
+                    <label for="show-link-input" class="text-light form-check-label mt-1">
+                        {{ __('messages.custom_link') }}
+                    </label>
+                    @error('show-link-input')
+                    <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col mb-3" id="custom-link-box">
+                <label for="custom-link" class="text-muted">{{ __('titles.custom_link') }}:</label>
+                <input id="custom-link" type="text" dir="ltr"
+                       class="border-secondary bg-dark text-light form-control @error('custom-link') is-invalid @enderror mt-2"
+                       name="customLink" value="{{ old('custom-link') }}" autocomplete="custom-link">
+                <p class="text-warning mt-2" dir="ltr" id="resultURL"></p>
+                @error('custom-link')
+                <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col mb-3 d-flex flex-column">
+                <label for="show-pass-input" class="text-muted form-label">{{ __('titles.pass_input') }}:</label>
+                <div class="d-flex">
+                    <input id="show-pass-input" type="checkbox"
+                           class="form-check-input @error('type') is-invalid @enderror mt-2"
+                           name="showPassInput">&nbsp;
+                    <label for="show-pass-input" class="text-light form-check-label mt-1">
+                        {{ __('messages.custom_pass') }}
+                    </label>
+                    @error('show-pass-input')
+                    <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col mb-3" id="pass-box">
+                <label for="pass-input" class="text-muted">{{ __('titles.custom_pass') }}:</label>
+                <input id="pass-input" type="text" dir="ltr"
+                       class="border-secondary bg-dark text-light form-control @error('pass-input') is-invalid @enderror mt-2"
+                       name="passInput" value="{{ old('pass-input','') }}" autocomplete="pass-input">
+                @error('pass-input')
+                <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+        </div>
+        <dov class="row mb-3">
+            <div class="col mb-3 d-flex flex-column">
+                <label for="join-request" class="text-muted form-label">{{ __('titles.join_request') }}:</label>
+                <div class="d-flex">
+                    <input id="join-request" type="checkbox"
+                           class="form-check-input @error('type') is-invalid @enderror mt-2"
+                           name="joinRequest" value="1">&nbsp;
+                    <label for="join-request" class="text-light form-check-label mt-1">
+                        {{ __('messages.join_request') }}
+                    </label>
+                    @error('join-request')
+                    <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+        </dov>
+        <button type="submit" class="btn btn-success">{{ __('titles.create_room') }}&nbsp;({{ __('titles.private_cost') }})</button>
     </form>
+@endsection
+
+@section('script')
+    <script>
+        $(document).ready(function () {
+            $('#custom-link-box').hide();
+            $('#pass-box').hide();
+
+            // Custom link input
+            $('#show-link-input').click(function () {
+                if ($(this).prop('checked')) {
+                    $('#custom-link-box').fadeIn();
+                } else {
+                    $('#custom-link-box').fadeOut();
+                    $('#custom-link').val('');
+                    $('#resultURL').text('');
+                }
+            });
+
+            $('#custom-link').on('input', function () {
+                $('#resultURL').text('https://' + document.domain + '/room/private/' + $(this).val())
+            });
+
+            // password input
+            $('#show-pass-input').click(function () {
+                if ($(this).prop('checked')) {
+                    $('#pass-box').fadeIn();
+                } else {
+                    $('#pass-box').fadeOut();
+                    $('#pass-input').val('');
+                }
+            });
+        });
+    </script>
 @endsection

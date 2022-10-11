@@ -33,4 +33,11 @@ return [
     'room_type' => 'نوع اتاق',
     'classic_room' => 'کلاسیک',
     'create_room' => 'ایجاد اتاق',
+    'public_cost' => '1 سکه',
+    'private_cost' => '12 سکه',
+    'link_input' => 'لینک اختصاصی',
+    'custom_link' => 'عبارت مورد نظر را وارد کنید',
+    'pass_input' => 'رمز عبور',
+    'custom_pass' => 'رمز مورد نظر را وارد کنید',
+    'join_request' => 'درخواست ورود',
 ];

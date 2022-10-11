@@ -33,4 +33,11 @@ return [
     'room_type' => 'Room type',
     'classic_room' => 'Classic',
     'create_room' => 'Create room',
+    'public_cost' => '1 coin',
+    'private_cost' => '12 coin',
+    'link_input' => 'Custom link',
+    'custom_link' => 'type your link',
+    'pass_input' => 'password',
+    'custom_pass' => 'type your password',
+    'join_request' => 'join request',
 ];

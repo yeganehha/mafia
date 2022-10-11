@@ -89,7 +89,9 @@
     </main>
 </div>
 <!-- Scripts -->
+<script src="/plugin/jquery/jquery.min.js"></script>
 <script src="/plugin/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="/js/app.js" defer></script>
+@yield('script')
 </body>
 </html>

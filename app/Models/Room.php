@@ -9,6 +9,9 @@ class Room extends Model
 {
     use HasFactory;
 
+    protected $publicCost = 1;
+    protected $privateCost = 12;
+
     protected $fillable = [
         'name',
         'type',
@@ -27,5 +30,18 @@ class Room extends Model
         $this->link = '';
         $this->save();
         auth()->user()->decrementCoin();
+    }
+
+    public function createPrivateRoom($name, $type, $link, $additionalCost, $password, $joinRequest)
+    {
+        $this->name = $name;
+        $this->type = $type;
+        $this->user_id = auth()->user()->id;
+        $this->is_private = 1;
+        $this->link = $link;
+        $this->password = $password;
+        $this->join_request = $joinRequest;
+        $this->save();
+        auth()->user()->decrementCoin($this->privateCost + $additionalCost);
     }
 }

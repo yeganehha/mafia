@@ -34,6 +34,6 @@
                 @endforeach
             </div>
         </div>
-        <button type="submit" class="btn btn-success">{{ __('titles.create_room') }}</button>
+        <button type="submit" class="btn btn-success">{{ __('titles.create_room') }}&nbsp;({{ __('titles.public_cost') }})</button>
     </form>
 @endsection
