@@ -44,5 +44,9 @@ Route::as('rooms.')->prefix('room/')->middleware('auth')->group(function () {
     Route::get('private/create', [RoomController::class, 'createPrivate'])->name('create.private');
     Route::post('private/create', [RoomController::class, 'storePrivate']);
 
-    Route::get('private', [RoomController::class, 'privateRoom'])->name('privateRoom');
+    Route::post('join', [RoomController::class, 'joinRoom'])->name('join');
+    Route::get('{id}/password', [RoomController::class, 'showPassForm'])->name('showPassForm');
+    Route::post('password', [RoomController::class, 'checkRoomPass'])->name('checkRoomPass');
+
+    Route::get('private/{link}', [RoomController::class, 'privateRoom'])->name('privateRoom');
 });

@@ -22,6 +22,11 @@ class Room extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function member()
+    {
+        return $this->hasMany(Member::class);
+    }
+
     public function createPublicRoom($name, $type)
     {
         $this->name = $name;
@@ -29,7 +34,7 @@ class Room extends Model
         $this->user_id = auth()->user()->id;
         $this->link = '';
         $this->save();
-        auth()->user()->decrementCoin();
+        auth()->user()->decrementCoin($this->publicCost);
     }
 
     public function createPrivateRoom($name, $type, $link, $additionalCost, $password, $joinRequest)

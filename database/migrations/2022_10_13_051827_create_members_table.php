@@ -12,20 +12,14 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('rooms', function (Blueprint $table) {
+        Schema::create('members', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
 
-            $table->unsignedBigInteger('user_id')->unique();
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
-            $table->enum('type', ['classic']);
-
-            $table->boolean('is_private')->default(0);
-            $table->string('link');
-            $table->string('password')->nullable();
-
-            $table->boolean('join_request')->default(0);
+            $table->unsignedBigInteger('room_id');
+            $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
 
             $table->timestamps();
         });
@@ -38,6 +32,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('rooms');
+        Schema::dropIfExists('members');
     }
 };

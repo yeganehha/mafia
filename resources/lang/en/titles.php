@@ -11,6 +11,7 @@ return [
     'score' => 'Score',
     'login' => 'Login / Register',
     'phone' => 'Phone number',
+    'password' => 'Password',
     'send_code' => 'Send verification code',
     'home_page' => 'Home page',
     'confirm_code' => 'Confirm code',

@@ -2,6 +2,7 @@
 
 namespace App\Services\Room;
 
+use App\Models\Member;
 use App\Models\Room;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
@@ -22,6 +23,28 @@ class RoomService
 
     public function generateLink()
     {
-        return url()->route('rooms.privateRoom') . '/' . Str::random(25);
+        return Str::random(25);
+    }
+
+    public function generateCustomLink($customLink)
+    {
+        return url()->route('rooms.privateRoom') . '/' . $customLink;
+    }
+
+    public function joinPrivateRoom($room, $user)
+    {
+        $member = new Member();
+        $member->joinPrivateRoom($room, $user);
+    }
+
+    public function joinPublicRoom($room, $user)
+    {
+        $member = new Member();
+        $member->joinPublicRoom($room, $user);
+    }
+
+    public function checkRoomPass($password, $room)
+    {
+
     }
 }

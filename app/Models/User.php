@@ -31,7 +31,7 @@ class User extends Authenticatable
 
     public function rooms()
     {
-        return $this->hasMany(Room::class);
+        return $this->belongsTo(Room::class);
     }
 
     public static function findByPhone($phone): self|null

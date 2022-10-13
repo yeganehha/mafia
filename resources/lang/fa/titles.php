@@ -11,6 +11,7 @@ return [
     'score' => 'امتیاز',
     'login' => 'ورود / عضویت',
     'phone' => 'شماره موبایل',
+    'password' => 'رمز عبور',
     'send_code' => 'ارسال کد تایید',
     'home_page' => 'صفحه اصلی',
     'confirm_code' => 'تایید کد',

@@ -34,31 +34,8 @@
         @foreach($rooms as $room)
             @if(auth()->check())
                 @if($room->user_id == auth()->user()->id)
-                    <div class="col-4">
-                        <div class="card rounded-10 border-0 shadow-lg cd-9 mx-auto mb-5 overflow-hidden text-light"
-                             style="width: 18rem; background: #1f1c26;">
-                            <div class="card-head d-flex flex-md-row align-items-center p-3">
-                                <div class="card-title mb-0">
-                                    <h5>{{ __('titles.room_name') .": ". $room->name }}</h5>
-                                    <small
-                                        class="text-muted">{{ __('titles.room_created') .": ". \Carbon\Carbon::parse($room->created_at)->diffForHumans() }}</small>
-                                </div>
-                            </div>
-                            <div class="card-body py-2">
-                                <div class="d-flex align-items-center mb-3">
-                                    <img class="card-img rounded-circle ms-2 me-2"
-                                         src="{{ '/storage/' . $room->user->avatar }}"
-                                         alt="Card image cap" style="width: 40px; height: 40px; border-radius: 100px">
-                                    <div class="d-flex flex-column">
-                                        <p class="m-0">{{ __('titles.room_creator') . ": " . $room->user->name }}</p>
-                                        <p class="text-muted m-0">{{ __('titles.creator_score') . ": " . $room->user->score }}</p>
-                                    </div>
-                                </div>
-                                <div class="w-100 d-flex justify-content-center mb-3">
-                                    <button class="btn btn-primary btn-sm">{{ __('titles.join_room') }}</button>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="col">
+
                     </div>
                 @else
                     <div class="alert alert-warning">
@@ -68,10 +45,13 @@
             @endif
         @endforeach
     </div>
+
     @if(auth()->check())
         <div class="d-flex w-75 justify-content-center align-items-center">
-            <a href="{{ route('rooms.create.public') }}" class="btn btn-success btn-sm me-2 ms-2">{{ __('titles.create_public_room') }}</a>
-            <a href="{{ route('rooms.create.private') }}" class="btn btn-success btn-sm me-2 ms-2">{{ __('titles.create_private_room') }}</a>
+            <a href="{{ route('rooms.create.public') }}"
+               class="btn btn-success btn-sm me-2 ms-2">{{ __('titles.create_public_room') }}</a>
+            <a href="{{ route('rooms.create.private') }}"
+               class="btn btn-success btn-sm me-2 ms-2">{{ __('titles.create_private_room') }}</a>
         </div>
     @else
         <div class="alert alert-warning">
@@ -105,7 +85,13 @@
                         </div>
                         @if(auth()->check())
                             <div class="w-100 d-flex justify-content-center mb-3">
-                                <button class="btn btn-primary btn-sm">{{ __('titles.join_room') }}</button>
+                                <form
+                                    action="{{ route('rooms.join', ['user' => auth()->user()->id , 'room' => $room->id]) }}"
+                                    method="POST">
+                                    @csrf
+                                    <button type="submit"
+                                            class="btn btn-primary btn-sm">{{ __('titles.join_room') }}</button>
+                                </form>
                             </div>
                         @else
                             <div class="text-center">
