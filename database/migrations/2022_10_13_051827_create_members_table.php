@@ -21,7 +21,9 @@ return new class extends Migration {
             $table->unsignedBigInteger('room_id');
             $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
 
-            $table->timestamps();
+            $table->boolean('is_creator')->default(0);
+
+            $table->unique(['user_id', 'room_id']);
         });
     }
 

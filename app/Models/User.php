@@ -29,9 +29,14 @@ class User extends Authenticatable
         return $this->hasMany(Token::class);
     }
 
-    public function rooms()
+    public function room()
     {
         return $this->belongsTo(Room::class);
+    }
+
+    public function scopeHasActiveRoom()
+    {
+        return Room::where('user_id', \auth()->user()->id)->first() ? true : false;
     }
 
     public static function findByPhone($phone): self|null

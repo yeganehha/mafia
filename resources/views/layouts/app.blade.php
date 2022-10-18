@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="/plugin/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/fonts/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="/fonts/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/plugin/toastr/css/toastr.min.css">
     <link rel="stylesheet" href="/css/app.css">
     @yield('css')
     <style>
@@ -91,6 +92,7 @@
 <!-- Scripts -->
 <script src="/plugin/jquery/jquery.min.js"></script>
 <script src="/plugin/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/plugin/toastr/js/toastr.min.js"></script>
 <script src="/js/app.js" defer></script>
 @yield('script')
 </body>

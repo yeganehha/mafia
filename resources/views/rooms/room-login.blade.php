@@ -12,13 +12,9 @@
             @endforeach
         @endif
     </div>
-    <form action="{{ route('rooms.checkRoomPass') }}" method="POST" class="w-75">
+    <form action="{{ route('rooms.checkRoomPass', request()->link) }}" method="POST" class="w-75">
         @csrf
         <div class="row">
-            @php
-                $room = session()->get('room');
-            @endphp
-            <input type="hidden" value="@if(isset($room)){{ $room->id }}@endif" name="room">
             <div class="col mb-3">
                 <label for="password" class="text-muted">{{ __('titles.password') }}:</label>
                 <input id="password" type="password"

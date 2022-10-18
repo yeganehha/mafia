@@ -33,20 +33,26 @@ Route::as('auth.')->prefix('Auth/')->group(function () {
 
 Route::as('profile.')->prefix('profile/')->middleware('auth')->group(function () {
     Route::get('/', [ProfileController::class, 'index'])->name('home');
+
+    Route::get('/active-room', [ProfileController::class, 'activeRoom'])->name('activeRoom');
+
     Route::get('/setting', [ProfileController::class, 'setting'])->name('setting');
     Route::post('/edit', [ProfileController::class, 'update'])->name('edit');
 });
 
-Route::as('rooms.')->prefix('room/')->middleware('auth')->group(function () {
-    Route::get('public/create', [RoomController::class, 'createPublic'])->name('create.public');
-    Route::post('public/create', [RoomController::class, 'storePublic']);
+Route::as('rooms.')->prefix('r/')->middleware('auth')->group(function () {
+    Route::get('all', [RoomController::class, 'allRooms'])->name('all');
 
-    Route::get('private/create', [RoomController::class, 'createPrivate'])->name('create.private');
-    Route::post('private/create', [RoomController::class, 'storePrivate']);
+    Route::get('create', [RoomController::class, 'createRoom'])->name('create');
+    Route::post('create', [RoomController::class, 'storeRoom']);
 
-    Route::post('join', [RoomController::class, 'joinRoom'])->name('join');
-    Route::get('{id}/password', [RoomController::class, 'showPassForm'])->name('showPassForm');
-    Route::post('password', [RoomController::class, 'checkRoomPass'])->name('checkRoomPass');
+    Route::get('{link}/join', [RoomController::class, 'joinRoom'])->name('join');
+    Route::post('{link}/enter', [RoomController::class, 'enterRoom'])->name('enter');
+    Route::post('{link}/delete', [RoomController::class, 'deleteRoom'])->name('delete');
+    Route::post('{link}/exit', [RoomController::class, 'exitRoom'])->name('exit');
 
-    Route::get('private/{link}', [RoomController::class, 'privateRoom'])->name('privateRoom');
+    Route::get('{link}/password', [RoomController::class, 'showPassForm'])->name('showPassForm');
+    Route::post('{link}/password', [RoomController::class, 'checkRoomPass'])->name('checkRoomPass');
+
+    Route::get('{id}/{link}', [RoomController::class, 'room'])->name('room');
 });

@@ -9,10 +9,10 @@ use Illuminate\Support\Str;
 
 class RoomService
 {
-    public function createPublicRoom($name, $type)
+    public function createPublicRoom($name, $type, $link)
     {
         $room = new Room();
-        $room->createPublicRoom($name, $type);
+        $room->createPublicRoom($name, $type, $link);
     }
 
     public function createPrivateRoom($name, $type, $link, $additionalCost, $password, $joinRequest)
@@ -23,24 +23,13 @@ class RoomService
 
     public function generateLink()
     {
-        return Str::random(25);
+        return Str::random(5);
     }
 
-    public function generateCustomLink($customLink)
-    {
-        return url()->route('rooms.privateRoom') . '/' . $customLink;
-    }
-
-    public function joinPrivateRoom($room, $user)
+    public function joinRoom($room, $user)
     {
         $member = new Member();
-        $member->joinPrivateRoom($room, $user);
-    }
-
-    public function joinPublicRoom($room, $user)
-    {
-        $member = new Member();
-        $member->joinPublicRoom($room, $user);
+        $member->joinRoom($room, $user);
     }
 
     public function checkRoomPass($password, $room)

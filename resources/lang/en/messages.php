@@ -7,4 +7,7 @@ return [
     'custom_link' => "create a private link for your room (additional cost: 1 coin)",
     'custom_pass' => "create a password for your room",
     'join_request' => "user should send join request for enter room",
+    'fail_to_create_room' => "You don't have enough coins, the room wasn't create",
+    'fail_to_join_room' => "You don't have enough coins, failed to join the room",
+    'duplicate_join' => "You are already a member of a room",
 ];

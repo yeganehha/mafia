@@ -22,31 +22,48 @@ class Room extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function member()
+    public function members()
     {
         return $this->hasMany(Member::class);
     }
 
-    public function createPublicRoom($name, $type)
+    public function createPublicRoom($name, $type, $link)
     {
-        $this->name = $name;
-        $this->type = $type;
-        $this->user_id = auth()->user()->id;
-        $this->link = '';
-        $this->save();
-        auth()->user()->decrementCoin($this->publicCost);
+        if (auth()->user()->coin > $this->publicCost) {
+            $this->name = $name;
+            $this->type = $type;
+            $this->user_id = auth()->user()->id;
+            $this->link = $link;
+            $this->save();
+            auth()->user()->decrementCoin($this->publicCost);
+            $member = new Member();
+            $member->joinCreator($this->id, auth()->user()->id);
+        } else {
+            return redirect(route('home'))->withErrors([
+                __('messages.fail_to_create_room')
+            ]);
+        }
     }
 
     public function createPrivateRoom($name, $type, $link, $additionalCost, $password, $joinRequest)
     {
-        $this->name = $name;
-        $this->type = $type;
-        $this->user_id = auth()->user()->id;
-        $this->is_private = 1;
-        $this->link = $link;
-        $this->password = $password;
-        $this->join_request = $joinRequest;
-        $this->save();
-        auth()->user()->decrementCoin($this->privateCost + $additionalCost);
+        if (auth()->user()->coin > $this->privateCost) {
+            $this->name = $name;
+            $this->type = $type;
+            $this->user_id = auth()->user()->id;
+            $this->is_private = 1;
+            $this->link = $link;
+            $this->password = $password;
+            $this->join_request = $joinRequest;
+            $this->save();
+            auth()->user()->decrementCoin($this->privateCost + $additionalCost);
+            $member = new Member();
+            $member->joinCreator($this->id, auth()->user()->id);
+        } else {
+            return redirect(route('home'))->withErrors([
+                __('messages.fail_to_create_room')
+            ]);
+        }
+
     }
 }

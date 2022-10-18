@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Profile;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Profile\EditProfileRequest;
+use App\Models\Member;
+use App\Models\Room;
 use App\Models\User;
 use App\Services\Profile\ProfileService;
 use Illuminate\Contracts\Foundation\Application;
@@ -53,5 +55,16 @@ class ProfileController extends Controller
         $request->user()->update($validDate);
 
         return redirect()->back();
+    }
+
+    public function activeRoom()
+    {
+        $member = Member::where('user_id', auth()->user()->id)->first();
+        if ($member) {
+            $room = Room::find($member->room_id);
+        }else{
+            $room = null;
+        }
+        return view('profile.active-room', compact(['room', 'member']));
     }
 }

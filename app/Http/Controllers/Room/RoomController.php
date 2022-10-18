@@ -6,90 +6,120 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Room\PrivateRoomRequest;
 use App\Http\Requests\Room\PublicRoomRequest;
 use App\Http\Requests\Room\RoomPassRequest;
+use App\Models\Member;
 use App\Models\Room;
 use App\Services\Room\RoomService;
 use Illuminate\Http\Request;
 
 class RoomController extends Controller
 {
-    public function createPublic()
+    public function createRoom()
     {
-        return view('rooms.create-public');
+        return view('rooms.create');
     }
 
-    public function storePublic(PublicRoomRequest $request, RoomService $roomService)
+    public function allRooms()
     {
-        $roomService->createPublicRoom($request->name, $request->type);
-        return redirect(route('home'));
+        $rooms = Room::all();
+        return view('rooms.all', compact('rooms'));
     }
 
-    public function createPrivate()
-    {
-        return view('rooms.create-private');
-    }
-
-    public function storePrivate(PrivateRoomRequest $request, RoomService $roomService)
+    public function storeRoom(PrivateRoomRequest $request, RoomService $roomService)
     {
         $name = $request->name;
         $type = $request->type;
 
-        if ($request->customLink) {
-            $link = $request->customLink;
-            $additionalCost = 1;
+        if ($request->createPrivate) {
+            if ($request->customLink) {
+                $link = $request->customLink;
+                $additionalCost = 1;
+            } else {
+                $link = $roomService->generateLink();
+                $additionalCost = 0;
+            }
+
+            if ($request->passInput) {
+                $password = $request->passInput;
+            } else {
+                $password = null;
+            }
+
+            if ($request->joinRequest) {
+                $joinRequest = 1;
+            } else {
+                $joinRequest = 0;
+            }
+            $roomService->createPrivateRoom($name, $type, $link, $additionalCost, $password, $joinRequest);
         } else {
             $link = $roomService->generateLink();
-            $additionalCost = 0;
+            $roomService->createPublicRoom($name, $type, $link);
         }
 
-        if ($request->passInput) {
-            $password = $request->passInput;
-        } else {
-            $password = null;
-        }
-
-        if ($request->joinRequest) {
-            $joinRequest = 1;
-        } else {
-            $joinRequest = 0;
-        }
-
-        $roomService->createPrivateRoom($name, $type, $link, $additionalCost, $password, $joinRequest);
         return redirect(route('home'));
     }
 
     public function joinRoom(Request $request, RoomService $roomService)
     {
-        $room = Room::whereId($request->room)->first();
+        $room = Room::whereLink($request->link)->first();
+        $member = Member::where('user_id', auth()->user()->id)->first();
 
         if ($room->is_private) {
             if ($room->password) {
-                session()->put('room', $room);
-                return redirect(route('rooms.showPassForm'));
+                return redirect(route('rooms.showPassForm', $room->link));
             } else {
-                $roomService->joinPrivateRoom($request->room, $request->user);
+                if (!$member) {
+                    $roomService->joinRoom($room->id, auth()->user()->id);
+                    return redirect(route('home'));
+                } else {
+                    return redirect(route('home'))->withErrors(__('messages.duplicate_join'));
+                }
             }
         } else {
-            $roomService->joinPublicRoom($request->room, $request->user);
+            if (!$member) {
+                $roomService->joinRoom($room->id, auth()->user()->id);
+                return redirect(route('home'));
+            } else {
+                return redirect(route('home'))->withErrors(__('messages.duplicate_join'));
+            }
         }
-
-        return redirect()->back();
     }
 
-    public function showPassForm()
+    public function  showPassForm(Request $request)
     {
         return view('rooms.room-login');
     }
 
     public function checkRoomPass(RoomPassRequest $request, RoomService $roomService)
     {
-        if ($request->room) {
-            $room = Room::whereId($request->room)->first();
-            if ($room->password == $request->password)
-                $roomService->joinPrivateRoom($room, $request->user);
-            return redirect(route('rooms.showPassForm'))->withErrors(['رمز عبور اشتباه است']);
-        } else {
+        $room = Room::whereLink($request->link)->first();
+        $member = Member::where('user_id', auth()->user()->id)->first();
 
+        if ($room->password == $request->password) {
+            if (!$member) {
+                $roomService->joinRoom($room->id, auth()->user()->id);
+                return redirect(route('home'));
+            } else {
+                return redirect(route('home'))->withErrors(__('messages.duplicate_join'));
+            }
         }
+
+        return redirect(route('rooms.showPassForm', $request->link))->withErrors(['رمز عبور اشتباه است']);
     }
 
+    public function enterRoom()
+    {
+
+    }
+
+    public function deleteRoom(Request $request)
+    {
+        Room::whereLink($request->link)->delete();
+        return redirect()->back();
+    }
+
+    public function exitRoom()
+    {
+        Member::where('user_id', auth()->user()->id)->delete();
+        return redirect()->back();
+    }
 }
