@@ -17,7 +17,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        auth()->loginUsingId(1);
         $member = Member::where('user_id', auth()->user()->id)->first();
         if ($member) {
             $room = Room::find($member->room_id);
