@@ -9,6 +9,7 @@ class Member extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
     protected $joinCost = 1;
 
 
@@ -17,7 +18,10 @@ class Member extends Model
         return $this->belongsTo(Room::class);
     }
 
-    public $timestamps = false;
+    public static function findByUserId($id)
+    {
+        return self::where('user_id', $id)->first();
+    }
 
     public function joinRoom($room, $user)
     {

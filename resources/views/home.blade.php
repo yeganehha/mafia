@@ -29,120 +29,57 @@
 @endsection
 
 @section('content')
-    <h5 class="text-light mb-3 mt-1">{{ __('titles.user_rooms') }}</h5>
-    <div class="w-50">
-        @if($errors->any())
-            @foreach ($errors->all() as $error)
-                <div class="alert alert-danger">
-                    <ul class="list-group">
-                        <li>{{ $error }}</li>
-                    </ul>
-                </div>
-            @endforeach
-        @endif
-    </div>
-    <div class="row w-100 text-center d-flex justify-content-center align-items-center">
-        @if($room)
-            @if(auth()->check())
-                <div class="col text-light">
-                    <p>{{ __('titles.room_name') }}</p>
-                    <p>{{ __('titles.room_type') }}</p>
-                    <p>{{ __('titles.room_model') }}</p>
-                    <p>{{ __('titles.room_link') }}</p>
-                    @if($member->is_creator)
-                        <p>{{ __('titles.room_pass') }}</p>
-                        <p>{{ __('titles.join_request') }}</p>
-                    @endif
-                </div>
-                <div class="col text-light">
-                    <p>{{ $room->name }}</p>
-                    <p>
-                        @switch($room->type)
-                            @case('classic')
-                                {{ __('titles.classic_room') }}
-                                @break
-                        @endswitch
-                    </p>
-                    <p>
-                        @if($room->is_private == 1)
-                            {{ __('titles.private_room') }}
-                        @else
-                            {{ __('titles.public_room') }}
-                        @endif
-                    </p>
-                    <div class="d-flex justify-content-center align-items-center mb-3">
-                        <button onclick="copyContent()" class="far fa-copy ms-4 bg-dark border-0 text-warning"
-                                id="copyRoomLink" data-bs-toggle="tooltip" data-bs-placement="top"
-                                title="{{ __('titles.copy_link') }}"></button>
-                        <small id="roomLink">{{ url(route('rooms.join', ['link'=>$room->link])) }}</small>
+    <h5 class="text-light mb-2 mt-3">{{ __('titles.all_rooms') }}</h5>
+    <div class="row w-100 justify-content-center align-items-center">
+        @foreach($rooms as $room)
+            <div class="col-4">
+                <div class="card rounded-10 border-0 shadow-lg cd-9 mx-auto mb-5 overflow-hidden text-light"
+                     style="width: 18rem; background: #1f1c26;">
+                    <div class="card-head d-flex flex-md-row align-items-center p-3">
+                        <div class="card-title mb-0">
+                            <h5>{{ __('titles.room_name') .": ". $room->name }}</h5>
+                            <small
+                                class="text-muted">{{ __('titles.room_created') .": ". \Carbon\Carbon::parse($room->created_at)->diffForHumans() }}</small>
+                        </div>
                     </div>
-                    @if($member->is_creator)
-                        <p>
-                            @if($room->password)
-                                {{ $room->password }}
+                    <div class="card-body py-2">
+                        <div class="d-flex align-items-center mb-3">
+                            <img class="card-img rounded-circle ms-2 me-2"
+                                 src="{{ '/storage/' . $room->user->avatar }}"
+                                 alt="Card image cap" style="width: 40px; height: 40px; border-radius: 100px">
+                            <div class="d-flex flex-column">
+                                <p class="m-0">{{ __('titles.room_creator') . ": " . $room->user->name }}</p>
+                                <p class="text-muted m-0">{{ __('titles.creator_score') . ": " . $room->user->score }}</p>
+                            </div>
+                        </div>
+                        @if(auth()->check())
+                            @if(auth()->user()->id == $room->user_id)
+                                <div class="w-100 d-flex justify-content-center mb-3">
+                                    <form
+                                        action="{{ route('rooms.enter', ['link'=>$room->link]) }}"
+                                        method="POST">
+                                        @csrf
+                                        <button type="submit"
+                                                class="btn btn-warning btn-sm">{{ __('titles.enter_room') }}</button>
+                                    </form>
+                                </div>
                             @else
-                                {{ __('titles.no_pass') }}
+                                <div class="w-100 d-flex justify-content-center mb-3">
+                                    <a href="{{ route('rooms.join', ['link'=>$room->link]) }}"
+                                       class="btn btn-primary btn-sm">{{ __('titles.join_room') }}</a>
+                                </div>
                             @endif
-                        </p>
-                        <p>
-                            @if($room->join_request)
-                                <a href="" class="btn btn-primary">{{ __('titles.show_join_requests') }}</a>
-                            @else
-                                {{ __('titles.in_active') }}
-                            @endif
-                        </p>
-                    @endif
-                </div>
-                <div class="row">
-                    <div class="col d-flex justify-content-center align-items-center">
-                        <form
-                            action="{{ route('rooms.enter', ['link'=>$room->link]) }}"
-                            method="POST" class="ms-2 me-2">
-                            @csrf
-                            <button type="submit"
-                                    class="btn btn-warning btn-sm">{{ __('titles.enter_room') }}</button>
-                        </form>
-                        @if($member->is_creator)
-                            <form
-                                action="{{ route('rooms.delete', ['link'=>$room->link]) }}"
-                                method="POST" class="ms-2 me-2">
-                                @csrf
-                                <button type="submit"
-                                        class="btn btn-danger btn-sm">{{ __('titles.delete_room') }}</button>
-                            </form>
                         @else
-                            <form
-                                action="{{ route('rooms.exit', ['link'=>$room->link]) }}"
-                                method="POST" class="ms-2 me-2">
-                                @csrf
-                                <button type="submit"
-                                        class="btn btn-danger btn-sm">{{ __('titles.exit_room') }}</button>
-                            </form>
+                            <div class="text-center">
+                                <small class="text-warning">
+                                    {{ __('messages.login_for_join') }}
+                                </small>
+                            </div>
                         @endif
                     </div>
                 </div>
-            @endif
-        @else
-            <div class="alert alert-warning w-auto">
-                {{ __('messages.no_room_for_user') }}
             </div>
-            <div class="w-100">
-                <a href="{{ route('rooms.create') }}"
-                   class="btn btn-success w-auto">{{ __('titles.create_room') }}</a>
-            </div>
-        @endif
-    </div>
-
-    @if(!auth()->check())
-        <div class="alert alert-warning">
-            {{ __('messages.login_for_create_room') }}
-        </div>
-    @endif
-    <hr class="w-75 text-light">
-
-    <div class="d-flex w-75 justify-content-center align-items-center">
-        <a href="{{ route('rooms.all') }}"
-           class="btn btn-success">{{ __('titles.all_rooms') }}</a>
+        @endforeach
     </div>
 
 @endsection

@@ -17,12 +17,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $member = Member::where('user_id', auth()->user()->id)->first();
-        if ($member) {
-            $room = Room::find($member->room_id);
-        } else {
-            $room = null;
-        }
-        return view('home', compact(['room', 'member']));
+        $rooms = Room::all();
+        return view('home', compact(['rooms']));
     }
 }

@@ -18,12 +18,6 @@ class RoomController extends Controller
         return view('rooms.create');
     }
 
-    public function allRooms()
-    {
-        $rooms = Room::all();
-        return view('rooms.all', compact('rooms'));
-    }
-
     public function storeRoom(PrivateRoomRequest $request, RoomService $roomService)
     {
         $name = $request->name;
@@ -54,14 +48,13 @@ class RoomController extends Controller
             $link = $roomService->generateLink();
             $roomService->createPublicRoom($name, $type, $link);
         }
-
         return redirect(route('home'));
     }
 
     public function joinRoom(Request $request, RoomService $roomService)
     {
-        $room = Room::whereLink($request->link)->first();
-        $member = Member::where('user_id', auth()->user()->id)->first();
+        $room = Room::findByLink($request->link);
+        $member = Member::findByUserId(auth()->user()->id);
 
         if ($room->is_private) {
             if ($room->password) {
@@ -84,15 +77,15 @@ class RoomController extends Controller
         }
     }
 
-    public function  showPassForm(Request $request)
+    public function showPassForm(Request $request)
     {
         return view('rooms.room-login');
     }
 
     public function checkRoomPass(RoomPassRequest $request, RoomService $roomService)
     {
-        $room = Room::whereLink($request->link)->first();
-        $member = Member::where('user_id', auth()->user()->id)->first();
+        $room = Room::findByLink($request->link);
+        $member = Member::findByUserId(auth()->user()->id);
 
         if ($room->password == $request->password) {
             if (!$member) {
@@ -102,7 +95,6 @@ class RoomController extends Controller
                 return redirect(route('home'))->withErrors(__('messages.duplicate_join'));
             }
         }
-
         return redirect(route('rooms.showPassForm', $request->link))->withErrors(['رمز عبور اشتباه است']);
     }
 
@@ -113,13 +105,13 @@ class RoomController extends Controller
 
     public function deleteRoom(Request $request)
     {
-        Room::whereLink($request->link)->delete();
+        Room::findByLink($request->link)->delete();
         return redirect()->back();
     }
 
     public function exitRoom()
     {
-        Member::where('user_id', auth()->user()->id)->delete();
+        Member::findByUserId(auth()->user()->id)->delete();
         return redirect()->back();
     }
 }

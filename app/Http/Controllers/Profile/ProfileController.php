@@ -45,24 +45,17 @@ class ProfileController extends Controller
     {
         $validDate = $request->all();
 
-        if ($request->avatar) {
-            $imgValidated = $request->validate([
-                'avatar' => 'file|max:512'
-            ]);;
-            $validDate['avatar'] = $profileService->saveAvatar($imgValidated);
-        }
-
-        $request->user()->update($validDate);
+        $profileService->updateUser($request->user(), $validDate);
 
         return redirect()->back();
     }
 
     public function activeRoom()
     {
-        $member = Member::where('user_id', auth()->user()->id)->first();
+        $member = Member::findByUserId(auth()->user()->id);
         if ($member) {
-            $room = Room::find($member->room_id);
-        }else{
+            $room = Room::findById($member->room_id);
+        } else {
             $room = null;
         }
         return view('profile.active-room', compact(['room', 'member']));

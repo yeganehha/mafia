@@ -27,9 +27,19 @@ class Room extends Model
         return $this->hasMany(Member::class);
     }
 
+    public static function findById($roomId)
+    {
+        return self::find($roomId);
+    }
+
+    public static function findByLink($roomLink)
+    {
+        return self::whereLink($roomLink)->first();
+    }
+
     public function createPublicRoom($name, $type, $link)
     {
-        if (auth()->user()->coin > $this->publicCost) {
+        if (auth()->user()->coin >= $this->publicCost) {
             $this->name = $name;
             $this->type = $type;
             $this->user_id = auth()->user()->id;
@@ -47,7 +57,7 @@ class Room extends Model
 
     public function createPrivateRoom($name, $type, $link, $additionalCost, $password, $joinRequest)
     {
-        if (auth()->user()->coin > $this->privateCost) {
+        if (auth()->user()->coin >= $this->privateCost) {
             $this->name = $name;
             $this->type = $type;
             $this->user_id = auth()->user()->id;

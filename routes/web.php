@@ -41,8 +41,6 @@ Route::as('profile.')->prefix('profile/')->middleware('auth')->group(function ()
 });
 
 Route::as('rooms.')->prefix('r/')->middleware('auth')->group(function () {
-    Route::get('all', [RoomController::class, 'allRooms'])->name('all');
-
     Route::get('create', [RoomController::class, 'createRoom'])->name('create');
     Route::post('create', [RoomController::class, 'storeRoom']);
 

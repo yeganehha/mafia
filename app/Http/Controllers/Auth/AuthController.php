@@ -47,7 +47,7 @@ class AuthController extends Controller
         try {
             if ($user = $authService->check2AuthCode($request->phone, $request->code)) {
                 auth()->login($user);
-                return redirect()->route('home');
+                return redirect()->route('profile.home');
             }
         } catch (Invalid2AuthCodeException $exception) {
             return redirect()->route('auth.showVerify')->withErrors([

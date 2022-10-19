@@ -25,7 +25,7 @@ class TwoAuthRequest extends FormRequest
     public function rules()
     {
         return [
-            'phone' => 'required|max:11',
+            'phone' => 'required|digits:11|numeric',
             'code' => 'required|numeric'
         ];
     }

@@ -62,7 +62,7 @@
             </div>
         </div>
 
-        <div id="privateBox">
+        <div id="privateBox" style="display: none">
             <div class="row mb-3">
                 <div class="col mb-3 d-flex flex-column">
                     <label for="show-link-input" class="text-muted form-label">{{ __('titles.link_input') }}:</label>
@@ -80,7 +80,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col mb-3" id="custom-link-box">
+                <div class="col mb-3" id="custom-link-box" style="display: none">
                     <label for="custom-link" class="text-muted">{{ __('titles.custom_link') }}:</label>
                     <input id="custom-link" type="text" dir="ltr"
                            class="border-secondary bg-dark text-light form-control @error('custom-link') is-invalid @enderror mt-2"
@@ -110,7 +110,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col mb-3" id="pass-box">
+                <div class="col mb-3" id="pass-box" style="display: none">
                     <label for="pass-input" class="text-muted">{{ __('titles.custom_pass') }}:</label>
                     <input id="pass-input" type="text" dir="ltr"
                            class="border-secondary bg-dark text-light form-control @error('pass-input') is-invalid @enderror mt-2"
@@ -148,19 +148,13 @@
 @section('script')
     <script>
         $(document).ready(function () {
-            $('#custom-link-box').hide();
-            $('#pass-box').hide();
-            $('#privateBox').hide();
 
             // Custom link input
             $('#show-link-input').click(function () {
-                if ($(this).prop('checked')) {
-                    $('#custom-link-box').fadeIn();
-                } else {
-                    $('#custom-link-box').fadeOut();
-                    $('#custom-link').val('');
-                    $('#resultURL').text('');
-                }
+                $('#custom-link-box').toggle('slow');
+                $('#custom-link').val('');
+                $('#resultURL').text('');
+
             });
 
             $('#custom-link').on('input', function () {
@@ -169,20 +163,15 @@
 
             // password input
             $('#show-pass-input').click(function () {
-                if ($(this).prop('checked')) {
-                    $('#pass-box').fadeIn();
-                } else {
-                    $('#pass-box').fadeOut();
-                    $('#pass-input').val('');
-                }
+                $('#pass-box').toggle('slow');
+                $('#pass-input').val('');
             });
 
             $('#createPrivate').click(function () {
-                if ($(this).prop('checked')) {
-                    $('#privateBox').fadeIn();
-                } else {
-                    $('#privateBox').fadeOut();
-                }
+                $('#privateBox').toggle('slow');
+                $('#custom-link').val('');
+                $('#resultURL').text('');
+                $('#pass-input').val('');
             });
         });
     </script>

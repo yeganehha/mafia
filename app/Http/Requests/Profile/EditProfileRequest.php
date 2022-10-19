@@ -25,6 +25,7 @@ class EditProfileRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string'],
+            'avatar' => 'file|max:512'
         ];
     }
 }

@@ -67,4 +67,9 @@ class User extends Authenticatable
             DB::table('users')->whereId(Auth::user()->id)->decrement('coin', $decrement);
         }
     }
+
+    public function updateUser($validDate)
+    {
+        parent::update($validDate);
+    }
 }
