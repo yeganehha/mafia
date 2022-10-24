@@ -9,6 +9,7 @@ return [
     'setting' => 'Setting',
     'active_room' => 'Active room',
     'coin' => 'Coin',
+    'buy_coin' => 'Buy coin',
     'score' => 'Score',
     'login' => 'Login / Register',
     'phone' => 'Phone number',

@@ -11,9 +11,9 @@
         "laravel/passport": "^11.2",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
+        "shetabit/payment": "^4.3",
         "smart-raya/ippanel-laravel": "^1.0",
-        "yoeunes/toastr": "^2.0",
-        "andywer/js-localization": "dev-laravel-6"
+        "yoeunes/toastr": "^2.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

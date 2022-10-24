@@ -43,8 +43,13 @@
         </div>
     </div>
 
+    <div class="row w-100 text-center d-flex justify-content-center align-items-center m-0">
+        <a href="{{ route('order.coin') }}" class="btn btn-warning w-auto">{{ __('titles.buy_coin') }} <i
+                class="fas fa-coins"></i></a>
+    </div>
+
     @if($room)
-        <div class="row w-100 text-center d-flex justify-content-center align-items-center m-0">
+        <div class="row w-100 text-center d-flex justify-content-center align-items-center m-0 mt-3">
             <hr class="bg-light w-75">
         </div>
         <div class="row w-100 text-center d-flex justify-content-center align-items-center m-0">

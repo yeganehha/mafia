@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Room\RoomController;
 use Illuminate\Support\Facades\Route;
@@ -53,6 +54,13 @@ Route::as('rooms.')->prefix('r/')->middleware('auth')->group(function () {
     Route::post('{link}/password', [RoomController::class, 'checkRoomPass'])->name('checkRoomPass');
 
     Route::get('{id}/{link}', [RoomController::class, 'room'])->name('room');
+});
+
+Route::as('order.')->prefix('order/')->middleware(['auth'])->group(function () {
+    Route::get('coin', [OrderController::class, 'buyCoinForm'])->name('coin');
+    Route::post('coin', [OrderController::class, 'buyCoin']);
+
+    Route::get('callback/{uuid}', [OrderController::class, 'callback'])->name('callback');
 });
 
 Route::as('admin.')->prefix('admin/')->middleware(['auth', 'admin'])->group(function () {

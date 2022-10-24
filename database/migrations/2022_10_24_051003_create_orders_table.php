@@ -15,12 +15,19 @@ return new class extends Migration {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
 
+            $table->uuid('uuid');
+            $table->unique(['uuid']);
+
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
-            $table->bigInteger('price');
-            $table->enum('status', ['unpaid', 'paid', 'canceled']);
-            $table->string('tracking_code');
+            $table->integer('price');
+            $table->enum('status', ['unpaid', 'paid', 'canceled'])->default('unpaid');
+
+            $table->string('gateway');
+            $table->timestamp('paid_at')->nullable();
+
+            $table->ipAddress();
 
             $table->timestamps();
         });
@@ -31,8 +38,28 @@ return new class extends Migration {
             $table->unsignedBigInteger('order_id');
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
 
-            $table->string('item');
-            $table->integer('value');
+            $table->string('item')->nullable();
+            $table->integer('value')->nullable();
+
+            $table->integer('amount');
+            $table->text('description')->nullable();
+
+            $table->timestamps();
+        });
+
+        Schema::create('transaction', function (Blueprint $table) {
+            $table->id();
+
+            $table->unsignedBigInteger('order_id');
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+
+            $table->string('tracking_code1')->nullable();
+            $table->string('tracking_code2')->nullable();
+
+            $table->enum('status', ['unpaid', 'paid', 'canceled'])->default('unpaid');
+
+            $table->string('gateway');
+            $table->text('result')->nullable();
 
             $table->timestamps();
         });
@@ -47,5 +74,6 @@ return new class extends Migration {
     {
         Schema::dropIfExists('orders');
         Schema::dropIfExists('order_items');
+        Schema::dropIfExists('transaction');
     }
 };

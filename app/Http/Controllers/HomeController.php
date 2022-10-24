@@ -15,7 +15,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        auth()->loginUsingId(1);
         $rooms = Room::all();
         return view('home', compact(['rooms']));
     }
