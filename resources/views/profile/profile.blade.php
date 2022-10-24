@@ -42,4 +42,31 @@
             </div>
         </div>
     </div>
+
+    @if($room)
+        <div class="row w-100 text-center d-flex justify-content-center align-items-center m-0">
+            <hr class="bg-light w-75">
+        </div>
+        <div class="row w-100 text-center d-flex justify-content-center align-items-center m-0">
+            <x-room-info :member="$member" :room="$room"></x-room-info>
+        </div>
+    @endif
+@endsection
+
+@section('script')
+    <script>
+        var tooltipTriggerEl = document.querySelector('[data-bs-toggle="tooltip"]')
+        var tooltip = new bootstrap.Tooltip(tooltipTriggerEl)
+
+        let text = document.getElementById('roomLink').innerHTML;
+
+        const copyContent = async () => {
+            try {
+                await navigator.clipboard.writeText(text);
+                toastr.success('کپی شد');
+            } catch (err) {
+                toastr.error(err)
+            }
+        }
+    </script>
 @endsection

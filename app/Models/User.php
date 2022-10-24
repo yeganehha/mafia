@@ -29,6 +29,11 @@ class User extends Authenticatable
         return $this->hasMany(Token::class);
     }
 
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
     public function room()
     {
         return $this->belongsTo(Room::class);

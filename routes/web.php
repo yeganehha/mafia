@@ -54,3 +54,8 @@ Route::as('rooms.')->prefix('r/')->middleware('auth')->group(function () {
 
     Route::get('{id}/{link}', [RoomController::class, 'room'])->name('room');
 });
+
+Route::as('admin.')->prefix('admin/')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->except('show');
+});

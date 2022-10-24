@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Member;
 use App\Models\Room;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
 
 class HomeController extends Controller
 {
@@ -17,6 +15,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        auth()->loginUsingId(1);
         $rooms = Room::all();
         return view('home', compact(['rooms']));
     }

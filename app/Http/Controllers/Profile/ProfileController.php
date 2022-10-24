@@ -24,7 +24,13 @@ class ProfileController extends Controller
     public function index()
     {
         $user = auth()->user();
-        return view('profile.profile', compact('user'));
+        $member = Member::findByUserId(auth()->user()->id);
+        if ($member) {
+            $room = Room::findById($member->room_id);
+        } else {
+            $room = null;
+        }
+        return view('profile.profile', compact(['user', 'room', 'member']));
     }
 
     /**
