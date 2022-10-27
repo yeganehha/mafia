@@ -32,7 +32,7 @@
                                        background="transparent" speed="0.8" style="width: 250px; height: 250px;"
                                        autoplay></lottie-player>
                         <h3>{{ __('messages.payment_unsuccessful') }}</h3>
-                        <h6>{{ $receipt }}</h6>
+                        <h6 class="mt-3 mb-4">{{ $receipt }}</h6>
                         <a href="{{ route('profile.orders') }}"
                            class="btn btn-warning">{{ __('titles.orders_list') }}</a>
                     @endif

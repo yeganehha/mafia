@@ -11,8 +11,9 @@ return [
     'fail_to_join_room' => "سکه کافی ندارید، پیوستن به اتاق ناموفق بود",
     'duplicate_join' => "از قبل عضو یک اتاق هستید",
     'number_of_coins' => "مقدار سکه مورد نظر را وارد کنید",
-    'no_order_for_user' => "شما تا کنون سفارشی نداشته اید",
+    'no_order_for_user' => "شما تاکنون سفارشی نداشته اید",
     'payment_successful' => "پرداخت موفقیت آمیز بود",
     'payment_unsuccessful' => "پرداخت غیرموفق بود",
-
+    'send_to_gateway' => "درحال هدایت به درگاه پرداخت",
+    'automatically_send_to_gateway' => "اگر به صورت خودکار به درگاه هدایت نشدید بعد از",
 ];

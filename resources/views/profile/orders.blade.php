@@ -39,43 +39,41 @@
             </thead>
             <tbody>
             @foreach($orders as $order)
-                @if($order->user_id == auth()->user()->id)
-                    <tr>
-                        <th scope="row">{{ $loop->iteration }}</th>
-                        <td>{{ $order->id }}</td>
-                        <td>
-                            @switch($order->items[0]->item)
-                                @case('coin')
-                                    <div class="text-warning">سکه</div>
-                                    @break
-                            @endswitch
-                        </td>
-                        <td>{{ $order->items[0]->value }}</td>
-                        <td>{{ $order->price }} تومان</td>
+                <tr>
+                    <th scope="row">{{ $loop->iteration }}</th>
+                    <td>{{ $order->id }}</td>
+                    <td>
+                        @switch($order->items[0]->item)
+                            @case('coin')
+                                <div class="text-warning">سکه</div>
+                                @break
+                        @endswitch
+                    </td>
+                    <td>{{ $order->items[0]->value }}</td>
+                    <td>{{ $order->price }} تومان</td>
 
-                        <td>
-                            @switch($order->status)
-                                @case(\App\Enum\OrderStatusEnum::UNPAID)
-                                    <div class="badge badge-warning badge-pill">پرداخت نشده</div>
-                                    @break
-                                @case(\App\Enum\OrderStatusEnum::PAID)
-                                    <div class="badge badge-success badge-pill">پرداخت شده</div>
-                                    @break
-                                @case(\App\Enum\OrderStatusEnum::CANCELED)
-                                    <div class="badge badge-dark badge-pill">لغو شده</div>
-                                    @break
-                            @endswitch
-                        </td>
-                        <td>
-                            @if($order->status == \App\Enum\OrderStatusEnum::UNPAID)
-                                <form action="{{ route('order.repay', $order->uuid) }}" method="post">
-                                    @csrf
-                                    <button type="submit" class="btn btn-info btn-sm">{{ __('titles.pay') }}</button>
-                                </form>
-                            @endif
-                        </td>
-                    </tr>
-                @endif
+                    <td>
+                        @switch($order->status)
+                            @case(\App\Enum\OrderStatusEnum::UNPAID)
+                                <div class="badge badge-warning badge-pill">پرداخت نشده</div>
+                                @break
+                            @case(\App\Enum\OrderStatusEnum::PAID)
+                                <div class="badge badge-success badge-pill">پرداخت شده</div>
+                                @break
+                            @case(\App\Enum\OrderStatusEnum::CANCELED)
+                                <div class="badge badge-dark badge-pill">لغو شده</div>
+                                @break
+                        @endswitch
+                    </td>
+                    <td>
+                        @if($order->status == \App\Enum\OrderStatusEnum::UNPAID)
+                            <form action="{{ route('order.repay', $order->uuid) }}" method="post">
+                                @csrf
+                                <button type="submit" class="btn btn-info btn-sm">{{ __('titles.pay') }}</button>
+                            </form>
+                        @endif
+                    </td>
+                </tr>
             @endforeach
             </tbody>
         </table>

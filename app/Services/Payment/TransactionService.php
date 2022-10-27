@@ -39,9 +39,14 @@ class TransactionService
         try {
             $receipt = Payment::amount($order->price)->transactionId($transaction->tracking_code1)->verify();
             $this->setOrderPaid($order->id, $transaction->id);
+
+            foreach ($order->items as $item)
+                if ($item->item == 'coin')
+                    $order->user->incrementCoin($item->value);
+
             return $receipt->getReferenceId();
-        } catch (InvalidPaymentException $exception) {
-            return $exception->getMessage();
+        } catch (InvalidPaymentException $e) {
+            return $e->getMessage();
         }
     }
 

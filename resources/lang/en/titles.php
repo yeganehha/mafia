@@ -9,6 +9,7 @@ return [
     'setting' => 'Setting',
     'orders' => 'Orders',
     'toman' => 'Toman',
+    'second' => 'second',
     'active_room' => 'Active room',
     'coin' => 'Coin',
     'buy_coin' => 'Buy coin',
@@ -66,4 +67,5 @@ return [
     'enter_room' => 'Enter the room',
     'delete_room' => 'Delete the room',
     'exit_room' => 'Exit room',
+    'click_here' => 'Click here',
 ];

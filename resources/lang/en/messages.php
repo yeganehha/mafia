@@ -14,4 +14,6 @@ return [
     'no_order_for_user' => "You have not placed an order yet",
     'payment_successful' => "Payment was successful",
     'payment_unsuccessful' => "payment was unsuccessful",
+    'send_to_gateway' => "Forwarding to secure payment provider",
+    'automatically_send_to_gateway' => "If you are not automatically redirected to the payment website with in",
 ];

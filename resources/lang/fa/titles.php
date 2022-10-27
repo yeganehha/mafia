@@ -9,6 +9,7 @@ return [
     'setting' => 'تنظیمات',
     'orders' => 'سفارشات',
     'toman' => 'تومان',
+    'second' => 'ثانیه',
     'active_room' => 'اتاق فعال شما',
     'coin' => 'سکه',
     'buy_coin' => 'خرید سکه',
@@ -66,4 +67,5 @@ return [
     'enter_room' => 'ورود به اتاق',
     'delete_room' => 'حذف اتاق',
     'exit_room' => 'خروج از اتاق',
+    'click_here' => 'اینجا کلیک کنید',
 ];
