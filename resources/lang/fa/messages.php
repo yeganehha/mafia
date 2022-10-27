@@ -10,5 +10,9 @@ return [
     'fail_to_create_room' => "سکه کافی ندارید، اتاق ساخته نشد",
     'fail_to_join_room' => "سکه کافی ندارید، پیوستن به اتاق ناموفق بود",
     'duplicate_join' => "از قبل عضو یک اتاق هستید",
+    'number_of_coins' => "مقدار سکه مورد نظر را وارد کنید",
+    'no_order_for_user' => "شما تا کنون سفارشی نداشته اید",
+    'payment_successful' => "پرداخت موفقیت آمیز بود",
+    'payment_unsuccessful' => "پرداخت غیرموفق بود",
 
 ];

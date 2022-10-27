@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\View\Components\RoomInfo;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -26,5 +27,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Blade::component('room-info', RoomInfo::class);
+        Paginator::useBootstrap();
     }
 }

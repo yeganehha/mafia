@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Profile;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Profile\EditProfileRequest;
 use App\Models\Member;
+use App\Models\Order;
 use App\Models\Room;
 use App\Models\User;
 use App\Services\Profile\ProfileService;
@@ -65,5 +66,11 @@ class ProfileController extends Controller
             $room = null;
         }
         return view('profile.active-room', compact(['room', 'member']));
+    }
+
+    public function orders()
+    {
+        $orders = Order::paginate(10);
+        return view('profile.orders', compact('orders'));
     }
 }

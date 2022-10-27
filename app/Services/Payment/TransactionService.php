@@ -2,43 +2,52 @@
 
 namespace App\Services\Payment;
 
-use Illuminate\Support\Facades\DB;
+use App\Exceptions\FailedConnectToBankException;
+use App\Models\Order;
+use App\Models\Transaction;
+use Exception;
 use Shetabit\Multipay\Exceptions\InvalidPaymentException;
 use Shetabit\Multipay\Invoice;
 use Shetabit\Payment\Facade\Payment;
 
 class TransactionService
 {
-    public function redirectToBank($orderId, $gateway, $price)
+    public function redirectToBank($order)
     {
-        return Payment::purchase(
-            (new Invoice)->amount($price),
-            function ($driver, $transactionId) use ($orderId, $gateway, $price) {
-                $this->storeTransaction($orderId, $gateway, $transactionId, $price);
-            }
-        )->pay()->render();
-    }
-
-    public function storeTransaction($orderId, $gateway, $transactionId, $price)
-    {
-        $data = [
-            'order_id' => $orderId,
-            'tracking_code1' => $transactionId,
-            'gateway' => $gateway,
-        ];
-
-        DB::table('transaction')->insert($data);
-        $this->verifyPayment($transactionId, $price);
-    }
-
-    public function verifyPayment($transactionId, $price)
-    {
+        $transaction = Transaction::insert($order->id, $order->gateway);
         try {
-            $receipt = Payment::amount($price)->transactionId($transactionId)->verify();
-            echo $receipt->getReferenceId();
-
-        } catch (InvalidPaymentException $exception) {
-            echo $exception->getMessage();
+            //DB::beginTransaction();
+            return Payment::callbackUrl(route('order.callback', $order->uuid))->purchase(
+                (new Invoice)->amount($order->price),
+                function ($driver, $transactionId) use ($transaction) {
+                    $transaction->setTransaction($transactionId);
+                    //DB::commit();
+                }
+            )->pay();
+        } catch (\Exception $exception) {
+            //DB::rollBack();
+            $transaction->setResult($exception->getMessage());
         }
+        throw new Exception(FailedConnectToBankException::class);
+    }
+
+    public function verifyPayment($uuid)
+    {
+        $order = Order::findByUuid($uuid);
+        $transaction = Transaction::findByOrder($order->id);
+
+        try {
+            $receipt = Payment::amount($order->price)->transactionId($transaction->tracking_code1)->verify();
+            $this->setOrderPaid($order->id, $transaction->id);
+            return $receipt->getReferenceId();
+        } catch (InvalidPaymentException $exception) {
+            return $exception->getMessage();
+        }
+    }
+
+    public function setOrderPaid($orderId, $transactionId)
+    {
+        Order::updateStatus($orderId);
+        Transaction::updateStatus($transactionId);
     }
 }

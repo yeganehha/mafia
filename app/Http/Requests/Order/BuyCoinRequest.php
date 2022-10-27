@@ -26,7 +26,6 @@ class BuyCoinRequest extends FormRequest
         return [
             'value' => ['required', 'numeric'],
             'gateway' => ['required', 'string'],
-            'description' => ['string','nullable'],
         ];
     }
 }

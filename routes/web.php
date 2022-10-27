@@ -32,35 +32,41 @@ Route::as('auth.')->prefix('Auth/')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-Route::as('profile.')->prefix('profile/')->middleware('auth')->group(function () {
-    Route::get('/', [ProfileController::class, 'index'])->name('home');
+Route::middleware('auth')->group(function () {
+    Route::as('profile.')->prefix('profile/')->middleware('auth')->group(function () {
+        Route::get('/', [ProfileController::class, 'index'])->name('home');
 
-    Route::get('/active-room', [ProfileController::class, 'activeRoom'])->name('activeRoom');
+        Route::get('/active-room', [ProfileController::class, 'activeRoom'])->name('activeRoom');
 
-    Route::get('/setting', [ProfileController::class, 'setting'])->name('setting');
-    Route::post('/edit', [ProfileController::class, 'update'])->name('edit');
-});
+        Route::get('/orders', [ProfileController::class, 'orders'])->name('orders');
 
-Route::as('rooms.')->prefix('r/')->middleware('auth')->group(function () {
-    Route::get('create', [RoomController::class, 'createRoom'])->name('create');
-    Route::post('create', [RoomController::class, 'storeRoom']);
+        Route::get('/setting', [ProfileController::class, 'setting'])->name('setting');
+        Route::post('/edit', [ProfileController::class, 'update'])->name('edit');
+    });
 
-    Route::get('{link}/join', [RoomController::class, 'joinRoom'])->name('join');
-    Route::post('{link}/enter', [RoomController::class, 'enterRoom'])->name('enter');
-    Route::post('{link}/delete', [RoomController::class, 'deleteRoom'])->name('delete');
-    Route::post('{link}/exit', [RoomController::class, 'exitRoom'])->name('exit');
+    Route::as('rooms.')->prefix('r/')->middleware('auth')->group(function () {
+        Route::get('create', [RoomController::class, 'createRoom'])->name('create');
+        Route::post('create', [RoomController::class, 'storeRoom']);
 
-    Route::get('{link}/password', [RoomController::class, 'showPassForm'])->name('showPassForm');
-    Route::post('{link}/password', [RoomController::class, 'checkRoomPass'])->name('checkRoomPass');
+        Route::get('{link}/join', [RoomController::class, 'joinRoom'])->name('join');
+        Route::post('{link}/enter', [RoomController::class, 'enterRoom'])->name('enter');
+        Route::post('{link}/delete', [RoomController::class, 'deleteRoom'])->name('delete');
+        Route::post('{link}/exit', [RoomController::class, 'exitRoom'])->name('exit');
 
-    Route::get('{id}/{link}', [RoomController::class, 'room'])->name('room');
-});
+        Route::get('{link}/password', [RoomController::class, 'showPassForm'])->name('showPassForm');
+        Route::post('{link}/password', [RoomController::class, 'checkRoomPass'])->name('checkRoomPass');
 
-Route::as('order.')->prefix('order/')->middleware(['auth'])->group(function () {
-    Route::get('coin', [OrderController::class, 'buyCoinForm'])->name('coin');
-    Route::post('coin', [OrderController::class, 'buyCoin']);
+        Route::get('{id}/{link}', [RoomController::class, 'room'])->name('room');
+    });
 
-    Route::get('callback/{uuid}', [OrderController::class, 'callback'])->name('callback');
+    Route::as('order.')->prefix('order/')->middleware(['auth'])->group(function () {
+        Route::get('coin', [OrderController::class, 'buyCoinForm'])->name('coin');
+        Route::post('coin', [OrderController::class, 'buyCoin']);
+
+        Route::post('repay/{uuid}', [OrderController::class, 'repay'])->name('repay');
+
+        Route::get('callback/{uuid}', [OrderController::class, 'callback'])->name('callback');
+    });
 });
 
 Route::as('admin.')->prefix('admin/')->middleware(['auth', 'admin'])->group(function () {

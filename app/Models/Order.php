@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\OrderStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -20,37 +21,48 @@ class Order extends Model
         'ip_address',
     ];
 
+    protected $casts = [
+        'status' => OrderStatusEnum::class,
+    ];
+
+    public static function updateStatus($orderId)
+    {
+        self::whereId($orderId)->update([
+            'status' => OrderStatusEnum::PAID,
+            'paid_at' => now()
+        ]);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function saveOrder($value, $description, $gateway, $item)
+    public function items()
     {
-        $price = $value * config('payment.coinPrice');
+        return $this->hasMany(Item::class);
+    }
 
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    public function saveOrder($price, $gateway, $ip)
+    {
         $this->uuid = Str::uuid();
         $this->user_id = auth()->user()->id;
         $this->price = $price;
-        $this->status = 'unpaid';
+        $this->status = OrderStatusEnum::UNPAID;
         $this->gateway = $gateway;
-        $this->ip_address = request()->ip();
+        $this->ip_address = $ip;
 
         $this->save();
-        $this->saveOrderItem($this->id, $item, $value, $price, $description);
         return $this;
     }
 
-    public function saveOrderItem($orderId, $item, $value, $price, $description)
+    public static function findByUuid($uuid)
     {
-        $data = [
-            'order_id' => $orderId,
-            'item' => $item,
-            'value' => $value,
-            'amount' => $price,
-            'description' => $description,
-        ];
-
-        DB::table('order_items')->insert($data);
+        return self::where('uuid', $uuid)->first();
     }
 }
