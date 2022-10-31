@@ -26,6 +26,9 @@ class PrivateRoomRequest extends FormRequest
         return [
             'name' => ['required', 'string'],
             'type' => ['required', 'in:classic'],
+            'password' => ['string'],
+            'customLink' => ['string'],
+            'joinRequest' => ['boolean'],
         ];
     }
 }

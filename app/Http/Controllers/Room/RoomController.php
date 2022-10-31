@@ -18,7 +18,7 @@ class RoomController extends Controller
         return view('rooms.create');
     }
 
-    public function storeRoom(PrivateRoomRequest $request, RoomService $roomService)
+    public function storeRoom(PublicRoomRequest $request, RoomService $roomService)
     {
         $name = $request->name;
         $type = $request->type;

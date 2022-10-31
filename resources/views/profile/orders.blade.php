@@ -67,10 +67,8 @@
                     </td>
                     <td>
                         @if($order->status == \App\Enum\OrderStatusEnum::UNPAID)
-                            <form action="{{ route('order.repay', $order->uuid) }}" method="post">
-                                @csrf
-                                <button type="submit" class="btn btn-info btn-sm">{{ __('titles.pay') }}</button>
-                            </form>
+                            <a href="{{ route('order.repay', $order->uuid) }}" type="submit"
+                               class="btn btn-info btn-sm">{{ __('titles.pay') }}</a>
                         @endif
                     </td>
                 </tr>

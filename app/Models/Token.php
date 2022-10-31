@@ -11,6 +11,7 @@ class Token extends Model
 {
     use HasFactory;
 
+    protected $table = "users_code";
     const EXPIRATION_TIME = 15; // minutes
 
     protected $fillable = [

@@ -56,15 +56,15 @@ Route::middleware('auth')->group(function () {
         Route::get('{link}/password', [RoomController::class, 'showPassForm'])->name('showPassForm');
         Route::post('{link}/password', [RoomController::class, 'checkRoomPass'])->name('checkRoomPass');
 
-        Route::get('{id}/{link}', [RoomController::class, 'room'])->name('room');
+        Route::get('{link}', [RoomController::class, 'room'])->name('room');
     });
 
-    Route::as('order.')->prefix('order/')->middleware(['auth'])->group(function () {
-        Route::get('coin', [OrderController::class, 'buyCoinForm'])->name('coin');
-        Route::post('coin', [OrderController::class, 'buyCoin']);
-
-        Route::post('repay/{uuid}', [OrderController::class, 'repay'])->name('repay');
-
+    Route::as('order.')->prefix('order/')->group(function () {
+        Route::middleware(['auth'])->group(function () {
+            Route::get('coin', [OrderController::class, 'buyCoinForm'])->name('coin');
+            Route::post('coin', [OrderController::class, 'buyCoin']);
+        });
+        Route::get('repay/{uuid}', [OrderController::class, 'repay'])->name('repay');
         Route::get('callback/{uuid}', [OrderController::class, 'callback'])->name('callback');
     });
 });

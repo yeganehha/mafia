@@ -48,6 +48,7 @@ class Room extends Model
             auth()->user()->decrementCoin($this->publicCost);
             $member = new Member();
             $member->joinCreator($this->id, auth()->user()->id);
+            return $this;
         } else {
             return redirect(route('home'))->withErrors([
                 __('messages.fail_to_create_room')
@@ -69,6 +70,7 @@ class Room extends Model
             auth()->user()->decrementCoin($this->privateCost + $additionalCost);
             $member = new Member();
             $member->joinCreator($this->id, auth()->user()->id);
+            return $this;
         } else {
             return redirect(route('home'))->withErrors([
                 __('messages.fail_to_create_room')

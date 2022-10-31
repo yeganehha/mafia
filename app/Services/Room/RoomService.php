@@ -12,13 +12,13 @@ class RoomService
     public function createPublicRoom($name, $type, $link)
     {
         $room = new Room();
-        $room->createPublicRoom($name, $type, $link);
+        return $room->createPublicRoom($name, $type, $link);
     }
 
     public function createPrivateRoom($name, $type, $link, $additionalCost, $password, $joinRequest)
     {
         $room = new Room();
-        $room->createPrivateRoom($name, $type, $link, $additionalCost, $password, $joinRequest);
+        return $room->createPrivateRoom($name, $type, $link, $additionalCost, $password, $joinRequest);
     }
 
     public function generateLink()
