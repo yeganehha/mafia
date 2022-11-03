@@ -12,10 +12,10 @@ use Shetabit\Payment\Facade\Payment;
 
 class TransactionService
 {
-    public function redirectToBank($order)
+    public static function redirectToBank($order)
     {
-        $transaction = Transaction::insert($order->id, $order->gateway);
         try {
+            $transaction = Transaction::insert($order->id, $order->gateway);
             //DB::beginTransaction();
             return Payment::callbackUrl(route('order.callback', $order->uuid))->purchase(
                 (new Invoice)->amount($order->price),
@@ -33,10 +33,10 @@ class TransactionService
 
     public function verifyPayment($uuid)
     {
-        $order = Order::findByUuid($uuid);
-        $transaction = Transaction::findByOrder($order->id);
-
         try {
+            $order = Order::findByUuid($uuid);
+            $transaction = Transaction::findByOrder($order->id);
+
             $receipt = Payment::amount($order->price)->transactionId($transaction->tracking_code1)->verify();
             $this->setOrderPaid($order->id, $transaction->id);
 
@@ -52,7 +52,11 @@ class TransactionService
 
     public function setOrderPaid($orderId, $transactionId)
     {
-        Order::updateStatus($orderId);
-        Transaction::updateStatus($transactionId);
+        try {
+            Order::updateStatus($orderId);
+            Transaction::updateStatus($transactionId);
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
     }
 }

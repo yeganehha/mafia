@@ -18,7 +18,6 @@ class ProfileService
         if (isset($validDate['avatar'])) {
             $validDate['avatar'] = $this->saveAvatar($validDate['avatar']);
         }
-
         $user->updateUser($validDate);
     }
 }

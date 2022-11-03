@@ -25,7 +25,7 @@ class ProfileController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $member = Member::findByUserId(auth()->user()->id);
+        $member = Member::findByUserId($user->id);
         if ($member) {
             $room = Room::findById($member->room_id);
         } else {

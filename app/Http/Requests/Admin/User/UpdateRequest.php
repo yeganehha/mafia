@@ -25,9 +25,10 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string'],
+            'avatar' => 'file|max:512',
             'coin' => ['numeric'],
             'score' => ['numeric'],
-            'phone' => ['required|digits:11|numeric'],
+            'phone' => 'required|digits:11|numeric',
             'superuser' => ['required', 'in:1,0'],
         ];
     }

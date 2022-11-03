@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Order;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\BuyCoinRequest;
 use App\Models\Order;
+use App\Models\Setting;
 use App\Services\Payment\OrderService;
 use App\Services\Payment\TransactionService;
 
@@ -12,19 +13,38 @@ class OrderController extends Controller
 {
     public function buyCoinForm()
     {
-        return view('order.coin-preorder');
+        $canBuyCoin = Setting::findByName('can_buy_coin');
+        if ($canBuyCoin->value)
+            return view('order.coin-preorder');
+        return redirect(route('profile.home'))->withErrors([
+            __('messages.cant_buy_coin')
+        ]);
     }
 
     public function buyCoin(BuyCoinRequest $request, OrderService $orderService)
     {
-        return $orderService->buyCoin($request->value, $request->gateway, $request->ip(), 'coin')->render();
+        try {
+            $canBuyCoin = Setting::findByName('can_buy_coin');
+            if ($canBuyCoin->value) {
+                $order = $orderService->buyCoin($request->value, $request->gateway, $request->ip(), 'coin');
+                return $orderService->PayOrder($order)->render();
+            } else {
+                return redirect(route('profile.home'))->withErrors([
+                    __('messages.cant_buy_coin')
+                ]);
+            }
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
     }
 
-    public function repay($uuid)
+    public function repay(OrderService $orderService, $uuid)
     {
-        $order = Order::findByUuid($uuid);
-        $transactionService = new TransactionService();
-        return $transactionService->redirectToBank($order)->render();
+        try {
+            return $orderService->PayOrder($uuid)->render();
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
     }
 
     public function callback($uuid, TransactionService $transactionService)

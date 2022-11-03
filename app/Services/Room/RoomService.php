@@ -32,8 +32,8 @@ class RoomService
         $member->joinRoom($room, $user);
     }
 
-    public function checkRoomPass($password, $room)
+    public function setNotExist($room)
     {
-
+        Room::setNotExist($room);
     }
 }

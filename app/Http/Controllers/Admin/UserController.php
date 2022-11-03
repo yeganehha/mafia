@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\User\CreateRequest;
 use App\Models\User;
+use App\Services\Admin\Users\UserService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -17,7 +20,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::paginate(10);
+        $users = User::query();
+
+        if ($keyword = request('search')) {
+            $users->where('phone', 'LIKE', "%{$keyword}%")->orWhere('name', 'LIKE', "%{$keyword}%");
+        }
+
+        $users = $users->paginate(10);
         return view('admin.users.index', compact('users'));
     }
 
@@ -37,30 +46,11 @@ class UserController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Routing\Redirector
      */
-    public function store(Request $request)
+    public function store(CreateRequest $request, UserService $userService)
     {
-        $validDate = $request->validate([
-            'name' => ['required', 'string'],
-            'email' => ['required', 'email'],
-            'superuser' => ['required', 'in:1,0'],
-        ]);
+        $validDate = $request->all();
 
-        if ($request->avatar) {
-            $imgValidated = $request->validate([
-                'avatar' => 'file|max:512'
-            ]);
-            $validDate['avatar'] = "/storage/" . Storage::disk('public')->putFile('avatars', $imgValidated['avatar']);
-        } else {
-            $validDate['avatar'] = '';
-        }
-
-        if ($request->password) {
-            $validDate = array_merge($validDate, $request->validate(['password' => 'string']));
-        } else {
-            $validDate['password'] = Str::random(6);
-        }
-
-        User::create($validDate);
+        $userService->createUser($validDate);
 
         return redirect(route('admin.users.index'));
     }
@@ -84,39 +74,34 @@ class UserController extends Controller
      * @param int $id
      * @return \Illuminate\Routing\Redirector
      */
-    public function update(Request $request, $id)
+    public function update(CreateRequest $request, $id, UserService $userService)
     {
-        $validDate = $request->validate([
-            'name' => ['required', 'string'],
-            'email' => ['required', 'email'],
-            'superuser' => ['required', 'in:1,0'],
-        ]);
+        $validDate = $request->all();
 
-        if ($request->avatar) {
-            $imgValidated = $request->validate([
-                'avatar' => 'file|max:512'
-            ]);
-            $validDate['avatar'] = "/storage/" . Storage::disk('public')->putFile('avatars', $imgValidated['avatar']);
-        }
+        $user = User::find($id);
 
-        if ($request->password) {
-            $validDate = array_merge($validDate, $request->validate(['password' => 'string']));
-        }
-
-        User::find($id)->update($validDate);
+        $userService->updateUser($user, $validDate);
 
         return redirect(route('admin.users.index'));
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @param $id
+     * @return RedirectResponse
      */
-    public function destroy($id)
+    public function activate($id)
     {
-        User::find($id)->delete();
+        User::find($id)->updateUser(['active' => 1]);
+        return redirect()->back();
+    }
+
+    /**
+     * @param $id
+     * @return RedirectResponse
+     */
+    public function deactivate($id)
+    {
+        User::find($id)->updateUser(['active' => 0]);
         return redirect()->back();
     }
 }

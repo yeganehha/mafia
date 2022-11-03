@@ -14,7 +14,7 @@
 
 @section('card')
     <div class="row w-100 text-center d-flex justify-content-center align-items-center m-0">
-        @if($room)
+        @if($room and $room->exist)
             <x-room-info :member="$member" :room="$room"></x-room-info>
         @else
             <div class="alert alert-warning w-auto">

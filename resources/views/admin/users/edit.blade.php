@@ -2,8 +2,8 @@
 
 @section('content')
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">ویرایش کاربر جدید</h1>
-        <a href="{{ route('admin.users.index') }}" class="btn btn-secondary btn-sm">بازگشت</a>
+        <h1 class="h3 mb-0 text-gray-800">{{ __('titles.edit_user') }}</h1>
+        <a href="{{ route('admin.users.index') }}" class="btn btn-secondary btn-sm">{{ __('titles.back') }}</a>
     </div>
 
     <div class="row">
@@ -26,7 +26,7 @@
             @method('PATCH')
             <div class="row">
                 <div class="col-6">
-                    <label for="name" class="form-label">نام کاربر:</label>
+                    <label for="name" class="form-label">{{ __('titles.name') }}:</label>
                     <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name"
                            value="{{ old('name', $user->name) }}" autofocus required>
                     @error('name')
@@ -36,7 +36,7 @@
                     @enderror
                 </div>
                 <div class="col-6">
-                    <label for="avatar" class="form-label">آواتار:</label>
+                    <label for="avatar" class="form-label">{{ __('titles.avatar') }}:</label>
                     <input type="file" class="form-control @error('avatar') is-invalid @enderror" id="avatar"
                            name="avatar" autofocus>
                     @error('avatar')
@@ -49,7 +49,7 @@
 
             <div class="row mt-4">
                 <div class="col-6">
-                    <label for="phone" class="form-label">شماره کاربر:</label>
+                    <label for="phone" class="form-label">{{ __('titles.phone') }}:</label>
                     <input type="tel" class="form-control @error('phone') is-invalid @enderror" id="phone"
                            name="phone" value="{{ old('phone', $user->phone) }}" autofocus required>
                     @error('phone')
@@ -59,11 +59,11 @@
                     @enderror
                 </div>
                 <div class="col-6">
-                    <label for="superuser" class="form-label">ادمین است؟</label>
-                    <select name="is_superuser" id="superuser"
+                    <label for="superuser" class="form-label">{{ __('titles.is_admin') }}؟</label>
+                    <select name="superuser" id="superuser"
                             class="form-select @error('superuser') is-invalid @enderror">
-                        <option value="0" @if(!$user->superuser) selected @endif>خیر</option>
-                        <option value="1" @if($user->superuser) selected @endif>بله</option>
+                        <option value="0" @if(!$user->superuser) selected @endif>{{ __('titles.no') }}</option>
+                        <option value="1" @if($user->superuser) selected @endif>{{ __('titles.yes') }}</option>
                     </select>
                     @error('superuser')
                     <span class="invalid-feedback" role="alert">
@@ -75,7 +75,7 @@
 
             <div class="row mt-4">
                 <div class="col-6">
-                    <label for="coin" class="form-label">سکه کاربر:</label>
+                    <label for="coin" class="form-label">{{ __('titles.coin') }}:</label>
                     <input type="number" class="form-control @error('coin') is-invalid @enderror" id="coin" name="coin"
                            value="{{ old('coin', $user->coin) }}" autofocus required>
                     @error('coin')
@@ -85,7 +85,7 @@
                     @enderror
                 </div>
                 <div class="col-6">
-                    <label for="score" class="form-label">امتیاز کاربر:</label>
+                    <label for="score" class="form-label">{{ __('titles.score') }}:</label>
                     <input type="number" class="form-control @error('score') is-invalid @enderror" id="score" name="score"
                            value="{{ old('score', $user->score) }}" autofocus required>
                     @error('score')
@@ -96,7 +96,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-success mt-4">ویرایش</button>
+            <button type="submit" class="btn btn-success mt-4">{{ __('titles.edit_user') }}</button>
         </form>
     </div>
 @endsection

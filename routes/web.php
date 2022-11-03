@@ -6,8 +6,6 @@ use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Room\RoomController;
 use Illuminate\Support\Facades\Route;
-use SmartRaya\IPPanelLaravel\Errors\ResponseCodes;
-use SmartRaya\IPPanelLaravel\Facades\IPPanel;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,7 +48,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('{link}/join', [RoomController::class, 'joinRoom'])->name('join');
         Route::post('{link}/enter', [RoomController::class, 'enterRoom'])->name('enter');
-        Route::post('{link}/delete', [RoomController::class, 'deleteRoom'])->name('delete');
+        Route::post('{link}/delete', [RoomController::class, 'setNotExist'])->name('delete');
         Route::post('{link}/exit', [RoomController::class, 'exitRoom'])->name('exit');
 
         Route::get('{link}/password', [RoomController::class, 'showPassForm'])->name('showPassForm');
@@ -59,17 +57,13 @@ Route::middleware('auth')->group(function () {
         Route::get('{link}', [RoomController::class, 'room'])->name('room');
     });
 
-    Route::as('order.')->prefix('order/')->group(function () {
-        Route::middleware(['auth'])->group(function () {
-            Route::get('coin', [OrderController::class, 'buyCoinForm'])->name('coin');
-            Route::post('coin', [OrderController::class, 'buyCoin']);
-        });
-        Route::get('repay/{uuid}', [OrderController::class, 'repay'])->name('repay');
-        Route::get('callback/{uuid}', [OrderController::class, 'callback'])->name('callback');
-    });
 });
 
-Route::as('admin.')->prefix('admin/')->middleware(['auth', 'admin'])->group(function () {
-    Route::get('/', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
-    Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->except('show');
+Route::as('order.')->prefix('order/')->group(function () {
+    Route::middleware(['auth'])->group(function () {
+        Route::get('coin', [OrderController::class, 'buyCoinForm'])->name('coin');
+        Route::post('coin', [OrderController::class, 'buyCoin']);
+    });
+    Route::get('repay/{uuid}', [OrderController::class, 'repay'])->name('repay');
+    Route::get('callback/{uuid}', [OrderController::class, 'callback'])->name('callback');
 });

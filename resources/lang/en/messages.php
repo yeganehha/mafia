@@ -2,6 +2,7 @@
 
 return [
     'no_room_for_user' => "You don't have an active rooms",
+    'room_exist_for_user' => "You have an active room",
     'no_room' => "There is no active room",
     'login_for_join' => "To join the rooms, first login",
     'login_for_create_room' => "To create a rooms, first login",
@@ -17,4 +18,5 @@ return [
     'payment_unsuccessful' => "payment was unsuccessful",
     'send_to_gateway' => "Forwarding to secure payment provider",
     'automatically_send_to_gateway' => "If you are not automatically redirected to the payment website with in",
+    'cant_buy_coin' => "Currently, the ability to buy coins is not active",
 ];

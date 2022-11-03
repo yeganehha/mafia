@@ -5,7 +5,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">پنل مدیریت</div>
+        <div class="sidebar-brand-text mx-3">{{ __('titles.admin_panel') }}</div>
     </a>
 
     <!-- Divider -->
@@ -15,7 +15,7 @@
     <li class="nav-item {{ \Route::currentRouteName() == 'admin.home' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.home') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>داشبورد</span></a>
+            <span>{{ __('titles.dashboard') }}</span></a>
     </li>
 
     <!-- Divider -->
@@ -25,13 +25,27 @@
     <li class="nav-item {{ in_array(\Route::currentRouteName(),['admin.users.index','admin.users.create','admin.users.edit']) ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.users.index') }}">
             <i class="fas fa-fw fa-users"></i>
-            <span>کاربران</span>
+            <span>{{ __('titles.users') }}</span>
+        </a>
+    </li>
+
+    <li class="nav-item {{ in_array(\Route::currentRouteName(),['admin.orders', 'admin.transactions']) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.orders') }}">
+            <i class="fas fa-shopping-cart"></i>
+            <span>{{ __('titles.orders') }}</span>
         </a>
     </li>
 
 
     <!-- Divider -->
-    <hr class="sidebar-divider d-none d-md-block">
+    <hr class="sidebar-divider d-md-block bg-light">
+
+    <li class="nav-item {{ in_array(\Route::currentRouteName(),['admin.setting']) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.setting') }}">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>{{ __('titles.setting') }}</span>
+        </a>
+    </li>
 
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">

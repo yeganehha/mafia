@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="/fonts/fontawesome/css/fontawesome.min.css">
 
     <link href="/css/admin.min.css" rel="stylesheet">
+    @yield('css')
 
 </head>
 

@@ -8,6 +8,7 @@ use App\Http\Requests\Room\PublicRoomRequest;
 use App\Http\Requests\Room\RoomPassRequest;
 use App\Models\Member;
 use App\Models\Room;
+use App\Models\Setting;
 use App\Services\Room\RoomService;
 use Illuminate\Http\Request;
 
@@ -17,6 +18,7 @@ class RoomController extends Controller
     {
         $name = $request->name;
         $type = $request->type;
+
         try {
             $link = $roomService->generateLink();
             if ($roomService->createPublicRoom($name, $type, $link))
@@ -31,10 +33,14 @@ class RoomController extends Controller
     {
         $name = $request->name;
         $type = $request->type;
+
         try {
+
             if ($request->customLink) {
+                $specialLinkCost = Setting::findByName('special_link_cost');
+
                 $link = $request->customLink;
-                $additionalCost = 1;
+                $additionalCost = $specialLinkCost->value;
             } else {
                 $link = $roomService->generateLink();
                 $additionalCost = 0;
@@ -73,12 +79,20 @@ class RoomController extends Controller
 
     public function joinRoom(Request $request, RoomService $roomService)
     {
-        $room = Room::findByLink($request->link);
-        $member = Member::findByUserId($request->user()->id);
-
-        if ($room->is_private) {
-            if ($room->password) {
-                return $this->response(true, 'رمز عبور اتاق را وارد کنید');
+        try {
+            $room = Room::findByLink($request->link);
+            $member = Member::findByUserId($request->user()->id);
+            if ($room->is_private) {
+                if ($room->password) {
+                    return $this->response(true, 'رمز عبور اتاق را وارد کنید');
+                } else {
+                    if (!$member) {
+                        $roomService->joinRoom($room->id, $request->user()->id);
+                        return $this->response(true, 'با موفقیت عضو شدید');
+                    } else {
+                        return $this->response(false, 'از قبل عضو یک اتاق هستید', [], 406);
+                    }
+                }
             } else {
                 if (!$member) {
                     $roomService->joinRoom($room->id, $request->user()->id);
@@ -87,29 +101,29 @@ class RoomController extends Controller
                     return $this->response(false, 'از قبل عضو یک اتاق هستید', [], 406);
                 }
             }
-        } else {
-            if (!$member) {
-                $roomService->joinRoom($room->id, $request->user()->id);
-                return $this->response(true, 'با موفقیت عضو شدید');
-            } else {
-                return $this->response(false, 'از قبل عضو یک اتاق هستید', [], 406);
-            }
+        } catch (\Exception $exception) {
+            return $this->response(false, $exception, [], 503);
         }
+
     }
 
     public function checkRoomPass(RoomPassRequest $request, RoomService $roomService)
     {
-        $room = Room::findByLink($request->link);
-        $member = Member::findByUserId($request->user()->id);
+        try {
+            $room = Room::findByLink($request->link);
+            $member = Member::findByUserId($request->user()->id);
 
-        if ($room->password == $request->password) {
-            if (!$member) {
-                $roomService->joinRoom($room->id, $request->user()->id);
-                return $this->response(true, 'با موفقیت عضو شدید');
-            } else {
-                return $this->response(false, 'از قبل عضو یک اتاق هستید', [], 406);
+            if ($room->password == $request->password) {
+                if (!$member) {
+                    $roomService->joinRoom($room->id, $request->user()->id);
+                    return $this->response(true, 'با موفقیت عضو شدید');
+                } else {
+                    return $this->response(false, 'از قبل عضو یک اتاق هستید', [], 406);
+                }
             }
+            return $this->response(false, 'رمز عبور اشتباه است', [], 406);
+        } catch (\Exception $exception) {
+            return $this->response(false, $exception, [], 503);
         }
-        return $this->response(false, 'رمز عبور اشتباه است', [], 406);
     }
 }

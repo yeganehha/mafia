@@ -23,6 +23,15 @@
 
 @section('card')
     <div class="row mx-auto">
+        @if($errors->any())
+            @foreach ($errors->all() as $error)
+                <div class="alert alert-danger">
+                    <ul class="list-group">
+                        <li>{{ $error }}</li>
+                    </ul>
+                </div>
+            @endforeach
+        @endif
         <div class="card p-0 rounded-5 border-0 shadow-lg cd-35 mx-auto mb-5" style="width: 18rem;">
             <div class="card-header border-0 p-0 d-flex align-items-center justify-content-center bg-dark">
                 <i class="fas fa-sack-dollar text-warning display-6"></i>
@@ -47,8 +56,7 @@
         <a href="{{ route('order.coin') }}" class="btn btn-warning w-auto">{{ __('titles.buy_coin') }} <i
                 class="fas fa-coins"></i></a>
     </div>
-
-    @if($room)
+    @if($room and $room->exist)
         <div class="row w-100 text-center d-flex justify-content-center align-items-center m-0 mt-3">
             <hr class="bg-light w-75">
         </div>

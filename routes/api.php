@@ -45,5 +45,4 @@ Route::as('order.')->prefix('order/')->group(function () {
     });
 
     Route::get('repay/{uuid}', [OrderController::class, 'repay'])->name('repay');
-    Route::get('callback/{uuid}', [OrderController::class, 'callback'])->name('callback');
 });

@@ -25,16 +25,25 @@
 
 @section('card')
     <div class="row w-100 text-center d-flex justify-content-center align-items-center m-0">
+        @if($errors->any())
+            @foreach ($errors->all() as $error)
+                <div class="alert alert-danger">
+                    <ul class="list-group">
+                        <li>{{ $error }}</li>
+                    </ul>
+                </div>
+            @endforeach
+        @endif
         <table class="table table-dark table-hover">
             <thead>
             <tr>
-                <th scope="col">ردیف</th>
-                <th scope="col">کد پیگیری</th>
-                <th scope="col">محصول</th>
-                <th scope="col">تعداد</th>
-                <th scope="col">قیمت کل</th>
-                <th scope="col">وضعیت</th>
-                <th scope="col">عملیات</th>
+                <th scope="col">{{ __('titles.row') }}</th>
+                <th scope="col">{{ __('titles.uuid') }}</th>
+                <th scope="col">{{ __('titles.product') }}</th>
+                <th scope="col">{{ __('titles.quantity') }}</th>
+                <th scope="col">{{ __('titles.price') }}</th>
+                <th scope="col">{{ __('titles.pay_status') }}</th>
+                <th scope="col">{{ __('titles.action') }}</th>
             </tr>
             </thead>
             <tbody>
@@ -45,23 +54,23 @@
                     <td>
                         @switch($order->items[0]->item)
                             @case('coin')
-                                <div class="text-warning">سکه</div>
+                                <div class="text-warning">{{ __('titles.coin') }}</div>
                                 @break
                         @endswitch
                     </td>
                     <td>{{ $order->items[0]->value }}</td>
-                    <td>{{ $order->price }} تومان</td>
+                    <td>{{ $order->price }} {{ __('titles.toman') }}</td>
 
                     <td>
                         @switch($order->status)
                             @case(\App\Enum\OrderStatusEnum::UNPAID)
-                                <div class="badge badge-warning badge-pill">پرداخت نشده</div>
+                                <div class="badge badge-warning badge-pill">{{ __('titles.unpaid') }}</div>
                                 @break
                             @case(\App\Enum\OrderStatusEnum::PAID)
-                                <div class="badge badge-success badge-pill">پرداخت شده</div>
+                                <div class="badge badge-success badge-pill">{{ __('titles.paid') }}</div>
                                 @break
                             @case(\App\Enum\OrderStatusEnum::CANCELED)
-                                <div class="badge badge-dark badge-pill">لغو شده</div>
+                                <div class="badge badge-dark badge-pill">{{ __('titles.canceled') }}</div>
                                 @break
                         @endswitch
                     </td>

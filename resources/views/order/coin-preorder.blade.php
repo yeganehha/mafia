@@ -101,7 +101,10 @@
     <script>
         $(document).ready(function () {
             $('#value').on('input', function () {
-                $('#total-amount').text($(this).val() * 1000)
+                @php
+                    $coinPrice = \App\Models\Setting::findByName('coin_price')
+                @endphp
+                $('#total-amount').text($(this).val() * {!! $coinPrice->value !!})
             });
 
             $('.method').click(function () {

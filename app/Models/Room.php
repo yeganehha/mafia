@@ -9,12 +9,10 @@ class Room extends Model
 {
     use HasFactory;
 
-    protected $publicCost = 1;
-    protected $privateCost = 12;
-
     protected $fillable = [
         'name',
         'type',
+        'exist'
     ];
 
     public function user()
@@ -37,15 +35,22 @@ class Room extends Model
         return self::whereLink($roomLink)->first();
     }
 
+    public static function findByUser($userId)
+    {
+        return self::latest('created_at')->where('user_id', $userId)->first();
+
+    }
+
     public function createPublicRoom($name, $type, $link)
     {
-        if (auth()->user()->coin >= $this->publicCost) {
+        $publicRoomCost = Setting::findByName('create_public_room_cost');
+        if (auth()->user()->coin >= $publicRoomCost->value) {
             $this->name = $name;
             $this->type = $type;
             $this->user_id = auth()->user()->id;
             $this->link = $link;
             $this->save();
-            auth()->user()->decrementCoin($this->publicCost);
+            auth()->user()->decrementCoin($publicRoomCost->value);
             $member = new Member();
             $member->joinCreator($this->id, auth()->user()->id);
             return $this;
@@ -58,7 +63,8 @@ class Room extends Model
 
     public function createPrivateRoom($name, $type, $link, $additionalCost, $password, $joinRequest)
     {
-        if (auth()->user()->coin >= $this->privateCost) {
+        $privateRoomCost = Setting::findByName('create_private_room_cost');
+        if (auth()->user()->coin >= $privateRoomCost->value) {
             $this->name = $name;
             $this->type = $type;
             $this->user_id = auth()->user()->id;
@@ -67,7 +73,7 @@ class Room extends Model
             $this->password = $password;
             $this->join_request = $joinRequest;
             $this->save();
-            auth()->user()->decrementCoin($this->privateCost + $additionalCost);
+            auth()->user()->decrementCoin($privateRoomCost->value + $additionalCost);
             $member = new Member();
             $member->joinCreator($this->id, auth()->user()->id);
             return $this;
@@ -76,6 +82,10 @@ class Room extends Model
                 __('messages.fail_to_create_room')
             ]);
         }
+    }
 
+    public static function setNotExist($room)
+    {
+        $room->update(['exist' => 0]);
     }
 }

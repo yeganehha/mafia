@@ -2,6 +2,7 @@
 
 return [
     'no_room_for_user' => "شما اتاق فعالی ندارید",
+    'room_exist_for_user' => "شما یک اتاق فعال دارید",
     'no_room' => "اتاق فعالی وجود ندارد",
     'login_for_join' => "برای پیوستن به اتاق ابتدا وارد شوید",
     'login_for_create_room' => "برای ساخت اتاق ابتدا وارد شوید",
@@ -17,4 +18,5 @@ return [
     'payment_unsuccessful' => "پرداخت غیرموفق بود",
     'send_to_gateway' => "درحال هدایت به درگاه پرداخت",
     'automatically_send_to_gateway' => "اگر به صورت خودکار به درگاه هدایت نشدید بعد از",
+    'cant_buy_coin' => "در حال حاضر قابلیت خرید سکه فعال نمی باشد",
 ];

@@ -20,7 +20,11 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'superuser',
+        'active',
         'phone',
+        'score',
+        'coin',
         'avatar',
     ];
 
@@ -51,9 +55,11 @@ class User extends Authenticatable
 
     public function registerNewUser($phone): User
     {
+        $defaultCoin = Setting::findByName('default_coin');
+
         $this->phone = $phone;
         $this->name = 'user-' . mt_rand(1000000, 9999999);
-        $this->coin = 100;
+        $this->coin = $defaultCoin->value;
         $this->avatar = "avatars/default-avatar.png";
         $this->save();
         return $this;
@@ -76,5 +82,10 @@ class User extends Authenticatable
     public function updateUser($validDate)
     {
         parent::update($validDate);
+    }
+
+    public static function createUser($validDate)
+    {
+        parent::create($validDate);
     }
 }

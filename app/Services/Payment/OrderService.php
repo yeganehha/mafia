@@ -4,8 +4,6 @@ namespace App\Services\Payment;
 
 use App\Models\Order;
 use App\Models\Item;
-use Shetabit\Multipay\Invoice;
-use Shetabit\Payment\Facade\Payment;
 
 class OrderService
 {
@@ -13,13 +11,28 @@ class OrderService
     {
         $order = new Order();
         $orderItem = new Item();
+        $coinPrice = \App\Models\Setting::findByName('coin_price');
+        $price = $value * $coinPrice->value;
 
-        $price = $value * config('payment.coinPrice');
+        try {
+            $order = $order->saveOrder($price, $gateway, $ip);
+            $orderItem->insert($order->id, $item, $value, $price);
+            return $order;
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
 
-        $order = $order->saveOrder($price, $gateway, $ip);
-        $orderItem->insert($order->id, $item, $value, $price);
+    }
 
-        $transactionService = new TransactionService();
-        return $transactionService->redirectToBank($order);
+    public function PayOrder($order)
+    {
+        try {
+            if (!$order instanceof Order) {
+                $order = Order::findByUuid($order);
+            }
+            return TransactionService::redirectToBank($order);
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
     }
 }
