@@ -104,4 +104,11 @@ class UserController extends Controller
         User::find($id)->updateUser(['active' => 0]);
         return redirect()->back();
     }
+
+    public function showRooms($userId)
+    {
+        $histories = User::find($userId)->histories()->paginate(10);
+
+        return view('admin.users.rooms',compact('histories'));
+    }
 }

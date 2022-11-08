@@ -14,6 +14,7 @@ return new class extends Migration {
     {
         Schema::table('rooms', function (Blueprint $table) {
             $table->boolean('exist')->after('join_request')->default(1);
+            $table->timestamp('deleted_at')->after('exist')->nullable();
         });
     }
 
@@ -26,6 +27,7 @@ return new class extends Migration {
     {
         Schema::table('rooms', function (Blueprint $table) {
             $table->dropColumn('exist');
+            $table->dropColumn('deleted_at');
         });
     }
 };

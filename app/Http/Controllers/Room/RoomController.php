@@ -32,6 +32,7 @@ class RoomController extends Controller
         $name = $request->name;
         $type = $request->type;
         $userId = $request->user()->id;
+        $description = 'Create a room';
 
         if ($request->createPrivate) {
             if ($request->customLink) {
@@ -56,11 +57,11 @@ class RoomController extends Controller
                 $joinRequest = 0;
             }
             $room = $roomService->createPrivateRoom($name, $type, $link, $additionalCost, $password, $joinRequest);
-            $historyService->saveHistory($room->id, $userId);
+            $historyService->saveHistory($room->id, $userId, $request->userAgent(), $request->ip(), $description);
         } else {
             $link = $roomService->generateLink();
             $room = $roomService->createPublicRoom($name, $type, $link);
-            $historyService->saveHistory($room->id, $userId);
+            $historyService->saveHistory($room->id, $userId, $request->userAgent(), $request->ip(), $description);
         }
         return redirect(route('home'));
     }
@@ -69,6 +70,7 @@ class RoomController extends Controller
     {
         $room = Room::findByLink($request->link);
         $member = Member::findByUserId(auth()->user()->id);
+        $description = 'Joined room';
 
         if ($room->is_private) {
             if ($room->password) {
@@ -76,7 +78,7 @@ class RoomController extends Controller
             } else {
                 if (!$member) {
                     $roomService->joinRoom($room->id, auth()->user()->id);
-                    $historyService->saveHistory($room->id, $request->user()->id);
+                    $historyService->saveHistory($room->id, $request->user()->id, $request->userAgent(), $request->ip(), $description);
                     return redirect(route('home'));
                 } else {
                     return redirect(route('home'))->withErrors(__('messages.duplicate_join'));
@@ -85,7 +87,7 @@ class RoomController extends Controller
         } else {
             if (!$member) {
                 $roomService->joinRoom($room->id, auth()->user()->id);
-                $historyService->saveHistory($room->id, $request->user()->id);
+                $historyService->saveHistory($room->id, $request->user()->id, $request->userAgent(), $request->ip(), $description);
                 return redirect(route('home'));
             } else {
                 return redirect(route('home'))->withErrors(__('messages.duplicate_join'));
@@ -102,11 +104,12 @@ class RoomController extends Controller
     {
         $room = Room::findByLink($request->link);
         $member = Member::findByUserId(auth()->user()->id);
+        $description = 'Joined room';
 
         if ($room->password == $request->password) {
             if (!$member) {
                 $roomService->joinRoom($room->id, auth()->user()->id);
-                $historyService->saveHistory($room->id, $request->user()->id);
+                $historyService->saveHistory($room->id, $request->user()->id, $request->userAgent(), $request->ip(), $description);
                 return redirect(route('home'));
             } else {
                 return redirect(route('home'))->withErrors(__('messages.duplicate_join'));
@@ -117,18 +120,25 @@ class RoomController extends Controller
 
     public function setNotExist(Request $request, RoomService $roomService, HistoryService $historyService)
     {
+        $description = 'Exit room';
         $room = Room::findByLink($request->link);
-        $history = History::findHistory($room->id, $request->user()->id);
+
+        $historyService->saveHistory($room->id, $request->user()->id, $request->userAgent(), $request->ip(), $description);
 
         $roomService->setNotExist($room);
-        $this->exitRoom();
-        $historyService->setExit($history);
+        Member::findByUserId($request->user()->id)->delete();
 
         return redirect()->back();
     }
 
-    public function exitRoom()
+    public function exitRoom($link)
     {
+        $description = 'Exit room';
+        $room = Room::findByLink($link);
+
+        $historyService = new HistoryService();
+        $historyService->saveHistory($room->id, request()->user()->id, request()->userAgent(), request()->ip(), $description);
+
         Member::findByUserId(auth()->user()->id)->delete();
         return redirect()->back();
     }

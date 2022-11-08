@@ -31,6 +31,7 @@
                 <th scope="col">{{ __('titles.score') }}</th>
                 <th scope="col">{{ __('titles.admin') }}</th>
                 <th scope="col">{{ __('titles.action') }}</th>
+                <th scope="col">{{ __('titles.others') }}</th>
             </tr>
             </thead>
             <tbody>
@@ -56,17 +57,24 @@
                             @if($user->active)
                                 <form action="{{ route('admin.users.deactivate', $user->id) }}" method="post">
                                     @csrf
-                                    <button class="btn btn-danger btn-sm me-2 ms-2">{{ __('titles.deactivate') }}</button>
+                                    <button
+                                        class="btn btn-danger btn-sm me-2 ms-2">{{ __('titles.deactivate') }}</button>
                                 </form>
                             @else
                                 <form action="{{ route('admin.users.activate', $user->id) }}" method="post">
                                     @csrf
-                                    <button class="btn btn-success btn-sm me-2 ms-2">{{ __('titles.activate') }}</button>
+                                    <button
+                                        class="btn btn-success btn-sm me-2 ms-2">{{ __('titles.activate') }}</button>
                                 </form>
                             @endif
-
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex justify-content-center">
                             <a href="{{ route('admin.orders', ['user' => $user->id]) }}"
-                               class="btn btn-primary btn-sm">{{ __('titles.orders') }}</a>
+                               class="btn btn-info btn-sm me-2 ms-2">{{ __('titles.orders') }}</a>
+                            <a href="{{ route('admin.users.history', $user->id) }}"
+                               class="btn btn-secondary btn-sm me-2 ms-2">{{ __('titles.history') }}</a>
                         </div>
                     </td>
                 </tr>

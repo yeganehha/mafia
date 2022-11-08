@@ -21,15 +21,27 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request, AuthService $authService)
     {
+        $user = User::findByPhone($request->phone);
         try {
-            if ($user = $authService->login($request->phone))
+            if ($user) {
+                if ($user->active) {
+                    if ($user = $authService->login($request->phone))
+                        return redirect()->route('auth.showVerify')->with([
+                            'phone' => $user->phone,
+                            'id' => $user->id,
+                        ]);
+                } else {
+                    return redirect()->route('auth.showLogin')->withErrors([
+                        "اکانت شما غیرفعال شده است، با پشتیبانی تماس بگیرید"
+                    ]);
+                }
+            } else {
+                $user = $authService->ProcessRegister($request->phone);
                 return redirect()->route('auth.showVerify')->with([
                     'phone' => $user->phone,
                     'id' => $user->id,
                 ]);
-            return redirect()->route('auth.showLogin')->withErrors([
-                "ارسال کد ناموفق بود"
-            ]);
+            }
         } catch (SendToManyCodeException $exception) {
             return redirect()->route('auth.showLogin')->withErrors([
                 "تعداد درخواست های ارسال پیامک شما، از حد مجاز بیشتر شده است!"

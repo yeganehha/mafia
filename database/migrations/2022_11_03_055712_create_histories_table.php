@@ -15,14 +15,19 @@ return new class extends Migration {
         Schema::create('histories', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
 
-            $table->unsignedBigInteger('room_id');
+            $table->unsignedBigInteger('room_id')->nullable();
             $table->foreign('room_id')->references('id')->on('rooms');
 
-            $table->timestamp('joined');
-            $table->timestamp('exited')->nullable();
+            $table->string('agent')->nullable();
+
+            $table->ipAddress();
+
+            $table->timestamp('time');
+
+            $table->string('description');
         });
     }
 

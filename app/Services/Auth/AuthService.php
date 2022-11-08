@@ -61,7 +61,7 @@ class AuthService
         return null;
     }
 
-    private function ProcessRegister($phone): ?User
+    public function ProcessRegister($phone): ?User
     {
         if ($this->sendTwoAuthCode($phone)) {
             $user = new User();

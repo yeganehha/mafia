@@ -66,7 +66,7 @@
             </form>
         @else
             <form
-                action="{{ route('rooms.exit', ['link'=>$room->link]) }}"
+                action="{{ route('rooms.exit', ['link' => $room->link]) }}"
                 method="POST" class="ms-2 me-2">
                 @csrf
                 <button type="submit"

@@ -12,27 +12,43 @@ class History extends Model
     protected $fillable = [
         'user_id',
         'room_id',
-        'joined',
+        'agent',
+        'ip_address',
+        'time',
+        'description',
         'exited',
     ];
 
     public $timestamps = false;
 
-    public function saveHistory($roomId, $userId)
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function room()
+    {
+        return $this->belongsTo(Room::class);
+    }
+
+    public function saveHistory($roomId, $userId, $agent, $ip, $description)
     {
         $this->room_id = $roomId;
         $this->user_id = $userId;
-        $this->joined = now();
+        $this->time = now();
+        $this->agent = $agent;
+        $this->ip_address = $ip;
+        $this->description = $description;
         $this->save();
-    }
-
-    public function setExit($history)
-    {
-        $history->update(['exited' => now()]);
     }
 
     public static function findHistory($roomId, $userId)
     {
-        return self::latest('joined')->where('room_id', $roomId)->where('user_id', $userId)->first();
+        return self::latest('id')->where('room_id', $roomId)->where('user_id', $userId)->first();
+    }
+
+    public static function findExitedLog($roomId, $userId)
+    {
+        return self::latest('id')->where('room_id', $roomId)->where('user_id', $userId)->where('description', 'Exit room')->first();
     }
 }

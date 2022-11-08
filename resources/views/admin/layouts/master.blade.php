@@ -49,7 +49,7 @@
 <script src="/plugin/jquery-easing/jquery.easing.min.js"></script>
 
 <script src="/js/admin.min.js"></script>
-
+@yield('script')
 </body>
 
 </html>

@@ -12,7 +12,8 @@ class Room extends Model
     protected $fillable = [
         'name',
         'type',
-        'exist'
+        'exist',
+        'deleted_at',
     ];
 
     public function user()
@@ -23,6 +24,11 @@ class Room extends Model
     public function members()
     {
         return $this->hasMany(Member::class);
+    }
+
+    public function histories()
+    {
+        return $this->hasMany(History::class);
     }
 
     public static function findById($roomId)
@@ -86,6 +92,6 @@ class Room extends Model
 
     public static function setNotExist($room)
     {
-        $room->update(['exist' => 0]);
+        $room->update(['exist' => 0, 'deleted_at' => now()]);
     }
 }

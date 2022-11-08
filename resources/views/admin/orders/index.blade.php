@@ -57,7 +57,9 @@
                                 @break
                         @endswitch
                     </td>
-                    <td><a href="{{ route('admin.users.index',['search'=>$order->user->phone]) }}">{{ $order->user->name }}</a></td>
+                    <td>
+                        <a href="{{ route('admin.users.index',['search'=>$order->user->phone]) }}">{{ $order->user->name }}</a>
+                    </td>
                     <td>
                         <div class="d-flex justify-content-evenly">
                             <a href="{{ route('admin.transactions', $order->id) }}"

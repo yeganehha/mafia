@@ -22,7 +22,7 @@
     <hr class="sidebar-divider">
 
     <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item {{ in_array(\Route::currentRouteName(),['admin.users.index','admin.users.create','admin.users.edit']) ? 'active' : '' }}">
+    <li class="nav-item {{ in_array(\Route::currentRouteName(),['admin.users.index','admin.users.create','admin.users.edit', 'admin.users.history']) ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.users.index') }}">
             <i class="fas fa-fw fa-users"></i>
             <span>{{ __('titles.users') }}</span>
@@ -33,6 +33,20 @@
         <a class="nav-link" href="{{ route('admin.orders') }}">
             <i class="fas fa-shopping-cart"></i>
             <span>{{ __('titles.orders') }}</span>
+        </a>
+    </li>
+
+    <li class="nav-item {{ in_array(\Route::currentRouteName(),['admin.rooms.index', 'admin.rooms.details']) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.rooms.index') }}">
+            <i class="fas fa-door-open"></i>
+            <span>{{ __('titles.rooms') }}</span>
+        </a>
+    </li>
+
+    <li class="nav-item {{ in_array(\Route::currentRouteName(),['admin.package.index', 'admin.package.create', 'admin.package.edit']) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.package.index') }}">
+            <i class="fas fa-coins"></i>
+            <span>{{ __('titles.coin_packages') }}</span>
         </a>
     </li>
 

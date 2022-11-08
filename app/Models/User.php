@@ -43,6 +43,11 @@ class User extends Authenticatable
         return $this->belongsTo(Room::class);
     }
 
+    public function histories()
+    {
+        return $this->hasMany(History::class);
+    }
+
     public function scopeHasActiveRoom()
     {
         return Room::where('user_id', \auth()->user()->id)->first() ? true : false;

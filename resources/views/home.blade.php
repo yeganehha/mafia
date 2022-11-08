@@ -30,8 +30,17 @@
 
 @section('content')
     <h5 class="text-light mb-2 mt-3">{{ __('titles.all_rooms') }}</h5>
+    @if($errors->any())
+        @foreach ($errors->all() as $error)
+            <div class="alert alert-danger">
+                <ul class="list-group">
+                    <li>{{ $error }}</li>
+                </ul>
+            </div>
+        @endforeach
+    @endif
     <div class="row w-100 justify-content-center align-items-center">
-        @if($rooms->count())
+        @if(\App\Models\Room::whereExist(1)->count() != 0)
             @foreach($rooms as $room)
                 @if($room->exist)
                     <div class="col-4">

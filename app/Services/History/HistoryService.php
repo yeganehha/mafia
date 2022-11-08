@@ -7,15 +7,9 @@ use App\Models\History;
 class HistoryService
 {
 
-    public function saveHistory($roomId, $userId)
+    public function saveHistory($roomId, $userId, $agent, $ip, $description)
     {
         $history = new History();
-        $history->saveHistory($roomId, $userId);
-    }
-
-    public function setExit($roomHistory)
-    {
-        $history = new History();
-        $history->setExit($roomHistory);
+        $history->saveHistory($roomId, $userId, $agent, $ip, $description);
     }
 }

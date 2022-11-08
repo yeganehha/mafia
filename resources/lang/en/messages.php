@@ -19,4 +19,5 @@ return [
     'send_to_gateway' => "Forwarding to secure payment provider",
     'automatically_send_to_gateway' => "If you are not automatically redirected to the payment website with in",
     'cant_buy_coin' => "Currently, the ability to buy coins is not active",
+    'still_member' => "Still in the room",
 ];
