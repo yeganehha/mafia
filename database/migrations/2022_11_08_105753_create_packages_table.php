@@ -17,7 +17,7 @@ return new class extends Migration {
 
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('image');
+            $table->string('image')->nullable();
 
             $table->timestamp('activation')->nullable();
             $table->timestamp('deactivation')->nullable();

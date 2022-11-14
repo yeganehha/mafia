@@ -3,7 +3,9 @@
 namespace App\Services\Payment;
 
 use App\Exceptions\FailedConnectToBankException;
+use App\Models\Item;
 use App\Models\Order;
+use App\Models\Package;
 use App\Models\Transaction;
 use Exception;
 use Shetabit\Multipay\Exceptions\InvalidPaymentException;
@@ -35,14 +37,24 @@ class TransactionService
     {
         try {
             $order = Order::findByUuid($uuid);
+
             $transaction = Transaction::findByOrder($order->id);
+            $item = Item::findByOrder($order->id);
+
+            $packageId = json_decode($item->description)->package_id;
+            $package = Package::findById($packageId);
 
             $receipt = Payment::amount($order->price)->transactionId($transaction->tracking_code1)->verify();
             $this->setOrderPaid($order->id, $transaction->id);
 
-            foreach ($order->items as $item)
-                if ($item->item == 'coin')
+            foreach ($order->items as $item) {
+                if ($item->item == 'coin') {
                     $order->user->incrementCoin($item->value);
+                }
+                if ($item->item == 'package') {
+                    $package->decrementCount();
+                }
+            }
 
             return $receipt->getReferenceId();
         } catch (InvalidPaymentException $e) {

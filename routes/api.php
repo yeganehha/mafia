@@ -42,6 +42,7 @@ Route::as('rooms.')->prefix('room/')->group(function () {
 Route::as('order.')->prefix('order/')->group(function () {
     Route::middleware(['auth:api'])->group(function () {
         Route::post('buyCoin', [OrderController::class, 'buyCoin']);
+        Route::post('package/{id}/buy', [OrderController::class, 'buyPackage']);
     });
 
     Route::get('repay/{uuid}', [OrderController::class, 'repay'])->name('repay');

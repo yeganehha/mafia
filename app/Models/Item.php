@@ -34,4 +34,9 @@ class Item extends Model
         $this->save();
         return $this;
     }
+
+    public static function findByOrder($orderId)
+    {
+        return self::latest('created_at')->where('order_id', $orderId)->first();
+    }
 }

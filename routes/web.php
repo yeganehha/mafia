@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Order\OrderController;
+use App\Http\Controllers\Package\PackageController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Room\RoomController;
 use Illuminate\Support\Facades\Route;
@@ -63,7 +64,11 @@ Route::as('order.')->prefix('order/')->group(function () {
     Route::middleware(['auth'])->group(function () {
         Route::get('coin', [OrderController::class, 'buyCoinForm'])->name('coin');
         Route::post('coin', [OrderController::class, 'buyCoin']);
+
+        Route::get('packages', [PackageController::class, 'index'])->name('packages');
+        Route::post('packages', [OrderController::class, 'buyPackage']);
     });
     Route::get('repay/{uuid}', [OrderController::class, 'repay'])->name('repay');
     Route::get('callback/{uuid}', [OrderController::class, 'callback'])->name('callback');
 });
+

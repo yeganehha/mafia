@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Order;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\BuyCoinRequest;
 use App\Models\Order;
+use App\Models\Package;
 use App\Models\Setting;
 use App\Services\Payment\OrderService;
 use App\Services\Payment\TransactionService;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
@@ -33,6 +35,17 @@ class OrderController extends Controller
                     __('messages.cant_buy_coin')
                 ]);
             }
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
+    }
+
+    public function buyPackage(Request $request, OrderService $orderService)
+    {
+        try {
+            $package = Package::findById($request->id);
+            $order = $orderService->buyPackage($package->id, $package->counted_price, $package->coins, 'zarinpal', $request->ip(), 'package');
+            return $orderService->PayOrder($order)->render();
         } catch (\Exception $exception) {
             throw $exception;
         }

@@ -2,10 +2,10 @@
 
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Package\PackageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,5 +40,5 @@ Route::as('rooms.')->prefix('rooms/')->group(function () {
 });
 Route::resource('rooms', RoomController::class)->only(['index', 'destroy']);
 
-Route::resource('package', PackageController::class);
+Route::resource('package', PackageController::class)->except('show');
 

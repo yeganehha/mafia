@@ -4,6 +4,7 @@ namespace App\Services\Payment;
 
 use App\Models\Order;
 use App\Models\Item;
+use App\Models\Setting;
 
 class OrderService
 {
@@ -11,7 +12,7 @@ class OrderService
     {
         $order = new Order();
         $orderItem = new Item();
-        $coinPrice = \App\Models\Setting::findByName('coin_price');
+        $coinPrice = Setting::findByName('coin_price');
         $price = $value * $coinPrice->value;
 
         try {
@@ -22,6 +23,21 @@ class OrderService
             throw $exception;
         }
 
+    }
+
+    public function buyPackage($packageId, $price, $value, $gateway, $ip, $item)
+    {
+        $order = new Order();
+        $orderItem = new Item();
+        $description = json_encode(array('package_id' => $packageId));
+
+        try {
+            $order = $order->saveOrder($price, $gateway, $ip);
+            $orderItem->insert($order->id, $item, $value, $price, $description);
+            return $order;
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
     }
 
     public function PayOrder($order)

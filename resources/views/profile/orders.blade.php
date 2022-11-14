@@ -56,6 +56,9 @@
                             @case('coin')
                                 <div class="text-warning">{{ __('titles.coin') }}</div>
                                 @break
+                            @case('package')
+                                <div class="text-info">{{ __('titles.package') }}</div>
+                                @break
                         @endswitch
                     </td>
                     <td>{{ $order->items[0]->value }}</td>

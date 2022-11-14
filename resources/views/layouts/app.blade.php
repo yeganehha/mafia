@@ -61,21 +61,28 @@
                                 {{ Auth::user()->name }}
                             </a>
 
-                            <div class="dropdown-menu dropdown-menu-end bg-dark" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item text-light" href="{{ route('home') }}">
+                            <div class="dropdown-menu dropdown-menu-end bg-dark text-center" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item text-light mb-1" href="{{ route('home') }}">
                                     {{ __('titles.home_page') }}
                                 </a>
-                                <a class="dropdown-item text-light" href="{{ route('profile.home') }}">
+                                <a class="dropdown-item text-light mb-1" href="{{ route('profile.home') }}">
                                     {{ __('titles.dashboard') }}
                                 </a>
-                                <a class="dropdown-item text-light" href="{{ route('auth.logout') }}"
-                                   onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                    {{ __('titles.exit') }}
+                                <a class="dropdown-item text-light mb-1" href="{{ route('order.coin') }}">
+                                    {{ __('titles.buy_coin') }}
+                                </a>
+                                <a class="dropdown-item text-light mb-1" href="{{ route('order.packages') }}">
+                                    {{ __('titles.packages') }}
                                 </a>
 
-                                <form id="logout-form" action="{{ route('auth.logout') }}" method="POST" class="d-none">
+                                <hr class="text-light mb-2 mt-2">
+
+
+                                <form id="logout-form" action="{{ route('auth.logout') }}" method="POST">
                                     @csrf
+                                    <button class="dropdown-item text-light mb-1">
+                                        {{ __('titles.exit') }}
+                                    </button>
                                 </form>
                             </div>
                         </li>
